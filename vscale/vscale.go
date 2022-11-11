@@ -70,3 +70,11 @@ func CreateServer(token string, config VscaleConfig) (string, int) {
 
 	return string(responseData), response.StatusCode
 }
+
+func GetServer(token string, id string) {
+
+}
+
+func RemoveServer(token string, id string) {
+
+}
