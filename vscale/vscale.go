@@ -3,12 +3,11 @@ package vscale
 import (
 	"bytes"
 	"encoding/json"
-	"fmt"
 	"io/ioutil"
 	"net/http"
 )
 
-type server struct {
+type VscaleConfig struct {
 	Make_from string `json:"make_from"`
 	Rplan     string `json:"rplan"`
 	Do_start  bool   `json:"do_start"`
@@ -32,7 +31,7 @@ func ValidateAccount(token string) int {
 	return response.StatusCode
 }
 
-func GetServers(token string) {
+func GetServers(token string) string {
 	url := "https://api.vscale.io/v1/scalets"
 	client := http.Client{}
 	request, err := http.NewRequest(http.MethodGet, url, nil)
@@ -48,20 +47,11 @@ func GetServers(token string) {
 		panic(err)
 	}
 
-	fmt.Println(string(responseData))
+	return string(responseData)
 }
 
-func CreateServer(token string) {
-
-	data, _ := json.MarshalIndent(server{
-		Make_from: "debian_11_64_001_master",
-		Rplan:     "small",
-		Do_start:  false,
-		Name:      "Old-Test2",
-		Password:  "P@ssw0rd7",
-		Location:  "msk0",
-	}, "", "	")
-
+func CreateServer(token string, config VscaleConfig) (string, int) {
+	data, _ := json.MarshalIndent(config, "", "	")
 	url := "https://api.vscale.io/v1/scalets"
 	client := http.Client{}
 	request, _ := http.NewRequest(http.MethodPost, url, bytes.NewBuffer(data))
@@ -78,5 +68,5 @@ func CreateServer(token string) {
 		panic(err)
 	}
 
-	fmt.Println(string(responseData))
+	return string(responseData), response.StatusCode
 }
