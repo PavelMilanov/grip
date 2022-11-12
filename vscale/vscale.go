@@ -4,17 +4,35 @@ import (
 	"bytes"
 	"encoding/json"
 	"io/ioutil"
+	"log"
 	"net/http"
 )
 
-type VscaleConfig struct {
-	Make_from string `json:"make_from"`
-	Rplan     string `json:"rplan"`
-	Do_start  bool   `json:"do_start"`
-	Name      string `json:"name"`
-	Keys      string `json:"keys,omitempty"` // заменит keys пустым значением, если мы его не передаем
-	Password  string `json:"password"`
-	Location  string `json:"location"`
+type VscaleServer struct {
+	Image    string `json:"make_from"`
+	Rplan    string `json:"rplan"`
+	Do_start bool   `json:"do_start"`
+	Name     string `json:"name"`
+	Keys     []int  `json:"keys,omitempty"` // заменит keys пустым значением, если мы его не передаем
+	Password string `json:"password"`
+	Location string `json:"location"`
+}
+
+type ServerConfig struct {
+	Ctid        int               `json:"ctid"`
+	Name        string            `json:"name"`
+	Status      string            `json:"status"`
+	Location    string            `json:"location"`
+	Rplan       string            `json:"rplan"`
+	Keys        []int             `json:"keys,omitempty"`
+	Tags        []string          `json:"tags,omitempty"`
+	PublicAddr  map[string]string `json:"public_address,omitempty"`
+	PrivateAddr map[string]string `json:"private_address,omitempty"`
+	Image       string            `json:"made_from,omitempty"`
+	CreateTime  string            `json:"created,omitempty"`
+	Active      bool              `json:"active"`
+	Loced       bool              `json:"loced"`
+	Deleted     bool              `json:"deleted,omitempty"`
 }
 
 func ValidateAccount(token string) int {
@@ -50,8 +68,8 @@ func GetServers(token string) string {
 	return string(responseData)
 }
 
-func CreateServer(token string, config VscaleConfig) (string, int) {
-	data, _ := json.MarshalIndent(config, "", "	")
+func CreateServer(token string, template VscaleServer) int {
+	data, _ := json.MarshalIndent(template, "", "	")
 	url := "https://api.vscale.io/v1/scalets"
 	client := http.Client{}
 	request, _ := http.NewRequest(http.MethodPost, url, bytes.NewBuffer(data))
@@ -68,7 +86,13 @@ func CreateServer(token string, config VscaleConfig) (string, int) {
 		panic(err)
 	}
 
-	return string(responseData), response.StatusCode
+	switch response.StatusCode {
+	case 201:
+		saveConfig(responseData)
+	case 400:
+		log.Panicln(string(responseData))
+	}
+	return response.StatusCode
 }
 
 func GetServer(token string, id string) {
@@ -78,3 +102,39 @@ func GetServer(token string, id string) {
 func RemoveServer(token string, id string) {
 
 }
+
+// func Test() {
+// 	data := []byte(`{
+// 	"ctid":15461047,
+// 	"name":"cli-new",
+// 	"status":"queued",
+// 	"location":"msk0",
+// 	"rplan":"small",
+// 	"keys":[],
+// 	"tags":[],
+// 	"public_address":{},
+// 	"private_address":{},
+// 	"made_from":"debian_11_64_001_master",
+// 	"hostname":"",
+// 	"created":"11.11.2022 20:50:44",
+// 	"active":true,
+// 	"locked":true,
+// 	"deleted":null,
+// 	"block_reason":null,
+// 	"block_reason_custom":null,
+// 	"date_block":null
+// }`)
+// 	var config ServerConfig
+// 	err := json.Unmarshal(data, &config)
+// 	if err != nil {
+// 		log.Fatalln(err)
+// 	}
+
+// 	err = ioutil.WriteFile("data.json", data, 0644)
+// 	// content, err := ioutil.ReadFile("data.json")
+// 	// if err != nil {
+// 	// 	log.Fatal(err)
+// 	// }
+
+// 	// fmt.Printf("File contents: %s", content)
+// }
