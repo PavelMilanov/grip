@@ -3,6 +3,7 @@ package vscale
 import (
 	"bytes"
 	"encoding/json"
+	"fmt"
 	"io/ioutil"
 	"log"
 	"net/http"
@@ -95,46 +96,22 @@ func CreateServer(token string, template VscaleServer) int {
 	return response.StatusCode
 }
 
-func GetServer(token string, id string) {
+func GetServer() {
+	files, err := ioutil.ReadDir("configs/")
+	if err != nil {
+		panic(err)
+	}
 
+	for _, config := range files {
+		readConfig(config.Name())
+	}
+}
+
+func InspectServer(name string) {
+	config := parceConfig(name)
+	fmt.Printf("%s", config)
 }
 
 func RemoveServer(token string, id string) {
 
 }
-
-// func Test() {
-// 	data := []byte(`{
-// 	"ctid":15461047,
-// 	"name":"cli-new",
-// 	"status":"queued",
-// 	"location":"msk0",
-// 	"rplan":"small",
-// 	"keys":[],
-// 	"tags":[],
-// 	"public_address":{},
-// 	"private_address":{},
-// 	"made_from":"debian_11_64_001_master",
-// 	"hostname":"",
-// 	"created":"11.11.2022 20:50:44",
-// 	"active":true,
-// 	"locked":true,
-// 	"deleted":null,
-// 	"block_reason":null,
-// 	"block_reason_custom":null,
-// 	"date_block":null
-// }`)
-// 	var config ServerConfig
-// 	err := json.Unmarshal(data, &config)
-// 	if err != nil {
-// 		log.Fatalln(err)
-// 	}
-
-// 	err = ioutil.WriteFile("data.json", data, 0644)
-// 	// content, err := ioutil.ReadFile("data.json")
-// 	// if err != nil {
-// 	// 	log.Fatal(err)
-// 	// }
-
-// 	// fmt.Printf("File contents: %s", content)
-// }

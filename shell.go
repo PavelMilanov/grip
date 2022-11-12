@@ -44,28 +44,30 @@ func cli_init() {
 
 func cli_server() {
 	serverCommand := flag.NewFlagSet("server", flag.ExitOnError)
-	serverImage := serverCommand.String("image", "debian_11_64_001_master", "OS image to server. Default: debian_11")
-	serverPlan := serverCommand.String("plan", "small", "Plan to server. Default: small")
-	serverState := serverCommand.Bool("start", false, "Server start status. Default: false")
-	serverName := serverCommand.String("name", "", "Server name")
-	serverPassword := serverCommand.String("pwd", "", "Server password")
-	serverLocation := serverCommand.String("loc", "msk0", "Server location")
-
-	serverCommand.Parse(os.Args[3:])
+	serverCommand.Parse(os.Args[2:])
 
 	token := env("VSCALE_TOKEN")
 	switch os.Args[2] {
 	case "ls":
-		info := vscale.GetServers(token)
-		fmt.Println(info)
+		vscale.GetServer()
 	case "create":
+		createCommand := flag.NewFlagSet("create", flag.ExitOnError)
+		createImage := createCommand.String("image", "debian_11_64_001_master", "OS image to server. Default: debian_11")
+		createPlan := createCommand.String("plan", "small", "Plan to server. Default: small")
+		createState := createCommand.Bool("start", false, "Server start status. Default: false")
+		createName := createCommand.String("name", "", "Server name")
+		createPassword := createCommand.String("pwd", "", "Server password")
+		createLocation := createCommand.String("loc", "msk0", "Server location")
+
+		createCommand.Parse(os.Args[3:])
+
 		config := vscale.VscaleServer{
-			Image:    *serverImage,
-			Rplan:    *serverPlan,
-			Do_start: *serverState,
-			Name:     *serverName,
-			Password: *serverPassword,
-			Location: *serverLocation,
+			Image:    *createImage,
+			Rplan:    *createPlan,
+			Do_start: *createState,
+			Name:     *createName,
+			Password: *createPassword,
+			Location: *createLocation,
 		}
 		status := vscale.CreateServer(token, config)
 		switch status {
@@ -75,6 +77,7 @@ func cli_server() {
 			fmt.Println("Invalid data")
 		}
 	case "inspect":
+		vscale.InspectServer(os.Args[3])
 	case "delete":
 	}
 }
