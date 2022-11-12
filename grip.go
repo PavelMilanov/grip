@@ -8,7 +8,7 @@ import (
 func init() {
 	log.SetPrefix("LOG: ")
 	log.SetFlags(log.Ldate | log.Lmicroseconds | log.Llongfile)
-	log.Println("init started")
+	os.Mkdir("configs", 0755)
 }
 
 func main() {
