@@ -28,7 +28,7 @@ func readConfig(file string) {
 
 func parceConfig(file string) []byte {
 	os.Chdir("configs")
-	filename := fmt.Sprintf("%s.json", file)
+	filename := fmt.Sprintf("%s", file)
 	content, err := ioutil.ReadFile(filename)
 	if err != nil {
 		log.Fatal(err)
