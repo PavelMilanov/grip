@@ -1,6 +1,7 @@
 package main
 
 import (
+	"fmt"
 	"os"
 )
 
@@ -14,5 +15,11 @@ func main() {
 		cli_init()
 	case "server":
 		cli_server()
+	default:
+		help_text := `
+grip init	- add prodvider token. (vscale)
+grip server	- menu interaction of server. 
+`
+		fmt.Println(help_text)
 	}
 }
