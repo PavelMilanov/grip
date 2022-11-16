@@ -3,7 +3,6 @@ package main
 import (
 	"flag"
 	"fmt"
-	"log"
 	"os"
 	"strings"
 
@@ -15,7 +14,7 @@ func env(key string) string {
 	err := godotenv.Load()
 
 	if err != nil {
-		log.Fatalln(err)
+		panic(err)
 	}
 	return os.Getenv(key)
 }
@@ -32,7 +31,7 @@ func cli_init() {
 		file, err := os.OpenFile(".env", os.O_WRONLY|os.O_CREATE, 0666)
 		if err != nil {
 			fmt.Println("Unable to create file:", err)
-			log.Panicln(err)
+			panic(err)
 		}
 		defer file.Close()
 		file.WriteString(fmt.Sprintf("%s_TOKEN=%s", strings.ToUpper(*vendorProvider), *vendorToken))
@@ -78,6 +77,13 @@ func cli_server() {
 		}
 	case "inspect":
 		vscale.InspectServer(os.Args[3])
-	case "delete":
+	case "rm":
+		status := vscale.RemoveServer(token, os.Args[3])
+		switch status {
+		case 200:
+			fmt.Println("Server successfully removed")
+		case 404:
+			fmt.Println("Server don't removed. Error")
+		}
 	}
 }

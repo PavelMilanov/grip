@@ -103,7 +103,8 @@ func GetServer() {
 	}
 
 	for _, config := range files {
-		readConfig(config.Name())
+		config := readConfig(config.Name())
+		fmt.Println(config.Name)
 	}
 }
 
@@ -112,6 +113,23 @@ func InspectServer(name string) {
 	fmt.Printf("%s", config)
 }
 
-func RemoveServer(token string, id string) {
+func RemoveServer(token string, name string) int {
+	config_file := fmt.Sprintf("%s.json", name)
+	config := readConfig(config_file)
+	url := fmt.Sprintf("https://api.vscale.io/v1/scalets/%d", config.Ctid)
+	client := http.Client{}
+	request, err := http.NewRequest(http.MethodDelete, url, nil)
+	request.Header.Add("X-Token", token)
 
+	response, err := client.Do(request)
+	if err != nil {
+		panic(err)
+	}
+	fmt.Println(response.StatusCode)
+	if response.StatusCode == 200 {
+		removeConfig(config_file)
+		return response.StatusCode
+	} else {
+		return 404
+	}
 }

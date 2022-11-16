@@ -4,7 +4,6 @@ import (
 	"encoding/json"
 	"fmt"
 	"io/ioutil"
-	"log"
 	"os"
 )
 
@@ -12,26 +11,28 @@ func saveConfig(data []byte) {
 	var config ServerConfig
 	err := json.Unmarshal(data, &config)
 	if err != nil {
-		log.Fatalln(err)
+		panic(err)
 	}
 	json_data, _ := json.MarshalIndent(config, "", "	")
 	ioutil.WriteFile(fmt.Sprintf("configs/%s.json", config.Name), json_data, 0644)
 }
 
-func readConfig(file string) {
+func readConfig(file string) ServerConfig {
 	content := parceConfig(file)
 	var config ServerConfig
 	json.Unmarshal(content, &config)
-	fmt.Println(config.Name)
-
+	return config
 }
 
 func parceConfig(file string) []byte {
 	os.Chdir("configs")
-	filename := fmt.Sprintf("%s", file)
-	content, err := ioutil.ReadFile(filename)
+	content, err := ioutil.ReadFile(file)
 	if err != nil {
-		log.Fatal(err)
+		panic(err)
 	}
 	return content
+}
+
+func removeConfig(file string) {
+	os.Remove(file)
 }

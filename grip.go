@@ -1,13 +1,10 @@
 package main
 
 import (
-	"log"
 	"os"
 )
 
 func init() {
-	log.SetPrefix("LOG: ")
-	log.SetFlags(log.Ldate | log.Lmicroseconds | log.Llongfile)
 	os.Mkdir("configs", 0755)
 }
 
