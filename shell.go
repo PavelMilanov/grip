@@ -41,12 +41,13 @@ func cli_init() {
 	}
 }
 
-func cli_server() {
-	serverCommand := flag.NewFlagSet("server", flag.ExitOnError)
+func cli_vscale() {
+	serverCommand := flag.NewFlagSet("vscale", flag.ExitOnError)
 	serverCommand.Parse(os.Args[2:])
 
 	token := env("VSCALE_TOKEN")
 	switch os.Args[2] {
+
 	case "ls":
 		vscale.GetServer()
 	case "create":
@@ -85,5 +86,13 @@ func cli_server() {
 		case 404:
 			fmt.Println("Server don't removed. Error")
 		}
+	default:
+		help_text := `
+grip vscale ls		- view servers.
+grip vscale create	- create new server.
+grip vscale inspect	- inspect server config by name.
+grip vscale rm		- remove server by name.
+`
+		fmt.Println(help_text)
 	}
 }
