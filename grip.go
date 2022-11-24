@@ -9,21 +9,24 @@ func init() {
 	os.Mkdir("configs", 0755)
 }
 
-func help_text() {
+func main() {
 	help_text := `
 grip init	- add prodvider token. (vscale)
 grip vscale	- menu interaction of vscale-provider. 
 `
-	fmt.Println(help_text)
-}
 
-func main() {
+	defer func() {
+		if r := recover(); r != nil {
+			fmt.Println(help_text)
+		}
+	}()
+
 	switch os.Args[1] {
 	case "init":
 		cli_init()
 	case "vscale":
 		cli_vscale()
 	default:
-		help_text()
+		fmt.Println(help_text)
 	}
 }

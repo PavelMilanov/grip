@@ -20,6 +20,15 @@ func env(key string) string {
 }
 
 func cli_init() {
+	help_text := `
+grip init -provider=<provider> -token=<provider token>
+`
+	defer func() {
+		if r := recover(); r != nil {
+			fmt.Println(help_text)
+		}
+	}()
+
 	initCommand := flag.NewFlagSet("init", flag.ExitOnError)
 	vendorProvider := initCommand.String("provider", "vscale", "vendor provider")
 	vendorToken := initCommand.String("token", "", "vendor token")
@@ -38,10 +47,24 @@ func cli_init() {
 		fmt.Println("Token initialized successful!")
 	case 403:
 		fmt.Println("Token invalid!")
+	default:
+		fmt.Println(help_text)
 	}
 }
 
 func cli_vscale() {
+	help_text := `
+grip vscale ls		- view servers.
+grip vscale create	- create new server.
+grip vscale inspect	- inspect server config by name.
+grip vscale rm		- remove server by name.
+`
+
+	defer func() {
+		if r := recover(); r != nil {
+			fmt.Println(help_text)
+		}
+	}()
 	serverCommand := flag.NewFlagSet("vscale", flag.ExitOnError)
 	serverCommand.Parse(os.Args[2:])
 
@@ -87,12 +110,6 @@ func cli_vscale() {
 			fmt.Println("Server don't removed. Error")
 		}
 	default:
-		help_text := `
-grip vscale ls		- view servers.
-grip vscale create	- create new server.
-grip vscale inspect	- inspect server config by name.
-grip vscale rm		- remove server by name.
-`
 		fmt.Println(help_text)
 	}
 }
