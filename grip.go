@@ -26,6 +26,8 @@ grip vscale	- menu interaction of vscale-provider.
 		cli_init()
 	case "vscale":
 		cli_vscale()
+	case "regru":
+		cli_regru()
 	default:
 		fmt.Println(help_text)
 	}

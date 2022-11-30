@@ -6,6 +6,7 @@ import (
 	"os"
 	"strings"
 
+	"github.com/PavelMilanov/grip/regru"
 	"github.com/PavelMilanov/grip/vscale"
 	"github.com/joho/godotenv"
 )
@@ -17,6 +18,18 @@ func env(key string) string {
 		panic(err)
 	}
 	return os.Getenv(key)
+}
+
+func save_token(token string, vendor string) {
+
+	file, err := os.OpenFile(".env", os.O_WRONLY|os.O_APPEND, 0666)
+	if err != nil {
+		fmt.Println("Unable to create file:", err)
+		panic(err)
+	}
+	defer file.Close()
+	file.WriteString(fmt.Sprintf("%s_TOKEN=%s\n", strings.ToUpper(vendor), token))
+	fmt.Println("Token initialized successful!")
 }
 
 func cli_init() {
@@ -35,20 +48,26 @@ grip init -provider=<provider> -token=<provider token>
 
 	initCommand.Parse(os.Args[2:])
 
-	switch statusCode := vscale.ValidateAccount(*vendorToken); statusCode {
-	case 200:
-		file, err := os.OpenFile(".env", os.O_WRONLY|os.O_CREATE, 0666)
-		if err != nil {
-			fmt.Println("Unable to create file:", err)
-			panic(err)
+	switch *vendorProvider {
+	case "vscale":
+		switch statusCode := vscale.ValidateAccount(*vendorToken); statusCode {
+		case 200:
+			save_token(*vendorToken, *vendorProvider)
+		case 403:
+			fmt.Printf("%s token invalid!", *vendorProvider)
+		default:
+			fmt.Println(help_text)
 		}
-		defer file.Close()
-		file.WriteString(fmt.Sprintf("%s_TOKEN=%s", strings.ToUpper(*vendorProvider), *vendorToken))
-		fmt.Println("Token initialized successful!")
-	case 403:
-		fmt.Println("Token invalid!")
-	default:
-		fmt.Println(help_text)
+
+	case "regru":
+		switch statusCode := regru.ValidateAccount(*vendorToken); statusCode {
+		case 200:
+			save_token(*vendorToken, *vendorProvider)
+		case 403:
+			fmt.Printf("%s token invalid!", *vendorProvider)
+		default:
+			fmt.Println(help_text)
+		}
 	}
 }
 
@@ -112,4 +131,8 @@ grip vscale rm		- remove server by name.
 	default:
 		fmt.Println(help_text)
 	}
+}
+
+func cli_regru() {
+
 }
