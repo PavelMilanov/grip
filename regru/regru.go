@@ -3,6 +3,7 @@ package regru
 import (
 	"bytes"
 	"encoding/json"
+	"fmt"
 	"io/ioutil"
 	"net/http"
 )
@@ -50,5 +51,13 @@ func CreateServer(token string, template RegruServer) int {
 }
 
 func GetServer() {
+	files, err := ioutil.ReadDir(RegruDir)
+	if err != nil {
+		panic(err)
+	}
 
+	for _, config := range files {
+		config := readConfig(config.Name())
+		fmt.Println(config.Server.Name)
+	}
 }
