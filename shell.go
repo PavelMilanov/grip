@@ -82,10 +82,10 @@ grip vscale create	- create new server.
 grip vscale inspect	- inspect server config by name.
 grip vscale rm		- remove server by name.
 `
-
 	defer func() {
 		if r := recover(); r != nil {
 			fmt.Println(help_text)
+			fmt.Println(r)
 		}
 	}()
 	serverCommand := flag.NewFlagSet("vscale", flag.ExitOnError)
@@ -143,11 +143,12 @@ grip regru create	- create new server.
 grip regru inspect	- inspect server config by name.
 grip regru rm		- remove server by name.
 `
-	// defer func() {
-	// 	if r := recover(); r != nil {
-	// 		fmt.Println(help_text)
-	// 	}
-	// }()
+	defer func() {
+		if r := recover(); r != nil {
+			fmt.Println(help_text)
+			fmt.Println(r)
+		}
+	}()
 	serverCommand := flag.NewFlagSet("regru", flag.ExitOnError)
 	serverCommand.Parse(os.Args[2:])
 
