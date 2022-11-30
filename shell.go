@@ -11,6 +11,11 @@ import (
 	"github.com/joho/godotenv"
 )
 
+func init() {
+	os.Mkdir(vscale.VscaleDir, 0755)
+	os.Mkdir(regru.RegruDir, 0755)
+}
+
 func env(key string) string {
 	err := godotenv.Load()
 
@@ -21,7 +26,6 @@ func env(key string) string {
 }
 
 func save_token(token string, vendor string) {
-
 	file, err := os.OpenFile(".env", os.O_WRONLY|os.O_APPEND, 0666)
 	if err != nil {
 		fmt.Println("Unable to create file:", err)
@@ -89,7 +93,6 @@ grip vscale rm		- remove server by name.
 
 	token := env("VSCALE_TOKEN")
 	switch os.Args[2] {
-
 	case "ls":
 		vscale.GetServer()
 	case "create":
@@ -105,7 +108,7 @@ grip vscale rm		- remove server by name.
 
 		config := vscale.VscaleServer{
 			Image:    *createImage,
-			Rplan:    *createPlan,
+			Size:     *createPlan,
 			Do_start: *createState,
 			Name:     *createName,
 			Password: *createPassword,
@@ -134,5 +137,43 @@ grip vscale rm		- remove server by name.
 }
 
 func cli_regru() {
+	help_text := `
+grip regru ls		- view servers.
+grip regru create	- create new server.
+grip regru inspect	- inspect server config by name.
+grip regru rm		- remove server by name.
+`
+	// defer func() {
+	// 	if r := recover(); r != nil {
+	// 		fmt.Println(help_text)
+	// 	}
+	// }()
+	serverCommand := flag.NewFlagSet("regru", flag.ExitOnError)
+	serverCommand.Parse(os.Args[2:])
 
+	token := env("REGRU_TOKEN")
+	switch os.Args[2] {
+	case "ls":
+		regru.GetServer()
+	case "create":
+		createCommand := flag.NewFlagSet("create", flag.ExitOnError)
+		createImage := createCommand.String("image", "debian-11-amd64", "OS image to server. Default: debian_11")
+		createPlan := createCommand.String("plan", "base-1", "Plan to server. Default: small")
+		createName := createCommand.String("name", "regru-vps", "Server name")
+		createBackup := createCommand.Bool("bkp", false, "Backuping to server")
+		createLocation := createCommand.String("loc", "msk1", "Server location")
+
+		createCommand.Parse(os.Args[3:])
+
+		config := regru.RegruServer{
+			Image:    *createImage,
+			Size:     *createPlan,
+			Name:     *createName,
+			Backups:  *createBackup,
+			Location: *createLocation,
+		}
+		regru.CreateServer(token, config)
+	default:
+		fmt.Println(help_text)
+	}
 }

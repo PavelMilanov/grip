@@ -7,6 +7,8 @@ import (
 	"os"
 )
 
+const VscaleDir = "configs/vscale"
+
 func saveConfig(data []byte) {
 	var config ServerConfig
 	err := json.Unmarshal(data, &config)
@@ -14,7 +16,7 @@ func saveConfig(data []byte) {
 		panic(err)
 	}
 	json_data, _ := json.MarshalIndent(config, "", "	")
-	ioutil.WriteFile(fmt.Sprintf("configs/%s.json", config.Name), json_data, 0644)
+	ioutil.WriteFile(fmt.Sprintf("%s/%s.json", VscaleDir, config.Name), json_data, 0644)
 }
 
 func readConfig(file string) ServerConfig {
@@ -25,14 +27,10 @@ func readConfig(file string) ServerConfig {
 }
 
 func parceConfig(file string) []byte {
-	os.Chdir("configs")
+	os.Chdir(VscaleDir)
 	content, err := ioutil.ReadFile(file)
 	if err != nil {
 		panic(err)
 	}
 	return content
-}
-
-func removeConfig(file string) {
-	os.Remove(file)
 }

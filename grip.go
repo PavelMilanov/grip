@@ -5,21 +5,18 @@ import (
 	"os"
 )
 
-func init() {
-	os.Mkdir("configs", 0755)
-}
-
 func main() {
 	help_text := `
-grip init	- add prodvider token. (vscale)
-grip vscale	- menu interaction of vscale-provider. 
+grip init	- add prodvider token. (vscale, regru)
+grip vscale	- menu interaction of vscale-provider.
+grip regru	- menu interaction of regru-provider. 
 `
 
-	defer func() {
-		if r := recover(); r != nil {
-			fmt.Println(help_text)
-		}
-	}()
+	// defer func() {
+	// 	if r := recover(); r != nil {
+	// 		fmt.Println(help_text)
+	// 	}
+	// }()
 
 	switch os.Args[1] {
 	case "init":
