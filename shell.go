@@ -174,6 +174,16 @@ grip regru rm		- remove server by name.
 			Location: *createLocation,
 		}
 		regru.CreateServer(token, config)
+	case "inspect":
+		regru.InspectServer(os.Args[3])
+	case "rm":
+		status := regru.RemoveServer(token, os.Args[3])
+		switch status {
+		case 204:
+			fmt.Println("Server successfully removed")
+		case 404:
+			fmt.Println("Server don't removed. Error")
+		}
 	default:
 		fmt.Println(help_text)
 	}

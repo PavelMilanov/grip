@@ -82,7 +82,7 @@ func GetServer() {
 }
 
 func InspectServer(name string) {
-	config := parceConfig(name)
+	config := parceConfig(name + ".json")
 	fmt.Printf("%s", config)
 }
 
@@ -100,9 +100,10 @@ func RemoveServer(token string, name string) int {
 	}
 
 	if response.StatusCode == 200 {
+		os.Chdir(VscaleDir)
 		os.Remove(config_file)
 		return response.StatusCode
 	} else {
-		return 404
+		return response.StatusCode
 	}
 }
