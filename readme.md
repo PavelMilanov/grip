@@ -3,7 +3,7 @@ ___
 ### Инструмент, позволяющий управлять инфраструктурой некоторых российских  облачных провайдеров c помощью CLI
 
 #### Поддерживаемые провайдеры
-- [Vscale](https://vds.selectel.ru/ru/"VSCALE")
+- [Vscale](https://vds.selectel.ru/ru/ "VSCALE")
  - [Reg.ru](https://www.reg.ru "REG.RU")
 
 #### Возможности
