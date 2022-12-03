@@ -24,4 +24,4 @@ grip vscale create --name=vscale-server --pwd=password
 ```
 > Server successfully created
 
-![](create.png "create vscale server")
+![[vscale create.png]]
