@@ -72,6 +72,8 @@ grip init -provider=<provider> -token=<provider token>
 		default:
 			fmt.Println(help_text)
 		}
+	default:
+		fmt.Printf("%s is not supported provider.", *vendorProvider)
 	}
 }
 
