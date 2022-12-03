@@ -9,6 +9,10 @@ import (
 	"os"
 )
 
+const RegruDir = "configs/regru"
+
+var server ServerConfig
+
 func ValidateAccount(token string) int {
 	url := "https://api.cloudvps.reg.ru/v1/account/info"
 	client := http.Client{}
@@ -44,7 +48,8 @@ func CreateServer(token string, template RegruServer) int {
 	}
 	switch response.StatusCode {
 	case 201:
-		saveConfig(responseData)
+		file, json_data := server.validateConfig(responseData)
+		ioutil.WriteFile(file, json_data, 0644)
 	case 400:
 		panic(string(responseData))
 	}
@@ -58,19 +63,19 @@ func GetServer() {
 	}
 
 	for _, config := range files {
-		config := readConfig(config.Name())
+		config := server.readConfig(config.Name())
 		fmt.Println(config.Server.Name)
 	}
 }
 
 func InspectServer(name string) {
-	config := parceConfig(name + ".json")
+	config := server.parceConfig(name + ".json")
 	fmt.Printf("%s", config)
 }
 
 func RemoveServer(token string, name string) int {
 	config_file := fmt.Sprintf("%s.json", name)
-	config := readConfig(config_file)
+	config := server.readConfig(config_file)
 	url := fmt.Sprintf("https://api.cloudvps.reg.ru/v1/reglets/%d", config.Server.Id)
 	client := http.Client{}
 	request, err := http.NewRequest(http.MethodDelete, url, nil)

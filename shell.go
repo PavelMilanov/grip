@@ -108,7 +108,7 @@ grip vscale rm		- remove server by name.
 
 		createCommand.Parse(os.Args[3:])
 
-		config := vscale.VscaleServer{
+		data := vscale.VscaleServer{
 			Image:    *createImage,
 			Size:     *createPlan,
 			Do_start: *createState,
@@ -116,7 +116,7 @@ grip vscale rm		- remove server by name.
 			Password: *createPassword,
 			Location: *createLocation,
 		}
-		status := vscale.CreateServer(token, config)
+		status := vscale.CreateServer(token, data)
 		switch status {
 		case 201:
 			fmt.Println("Server successfully created")
@@ -168,14 +168,14 @@ grip regru rm		- remove server by name.
 
 		createCommand.Parse(os.Args[3:])
 
-		config := regru.RegruServer{
+		data := regru.RegruServer{
 			Image:    *createImage,
 			Size:     *createPlan,
 			Name:     *createName,
 			Backups:  *createBackup,
 			Location: *createLocation,
 		}
-		regru.CreateServer(token, config)
+		regru.CreateServer(token, data)
 	case "inspect":
 		regru.InspectServer(os.Args[3])
 	case "rm":

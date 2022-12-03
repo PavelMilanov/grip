@@ -1,5 +1,12 @@
 package regru
 
+import (
+	"encoding/json"
+	"fmt"
+	"io/ioutil"
+	"os"
+)
+
 type RegruServer struct {
 	Image    string `json:"image"`
 	Size     string `json:"size"`
@@ -11,6 +18,31 @@ type RegruServer struct {
 
 type ServerConfig struct {
 	Server ServerReglet `json:"reglet"`
+}
+
+func (s ServerConfig) validateConfig(data []byte) (string, []byte) {
+	err := json.Unmarshal(data, &s)
+	if err != nil {
+		panic(err)
+	}
+	json_data, _ := json.MarshalIndent(s, "", "	")
+	file := fmt.Sprintf("%s/%s.json", RegruDir, s.Server.Name)
+	return file, json_data
+}
+
+func (s ServerConfig) readConfig(file string) ServerConfig {
+	content := s.parceConfig(file)
+	json.Unmarshal(content, &s)
+	return s
+}
+
+func (s ServerConfig) parceConfig(file string) []byte {
+	os.Chdir(RegruDir)
+	content, err := ioutil.ReadFile(file)
+	if err != nil {
+		panic(err)
+	}
+	return content
 }
 
 type ServerReglet struct {

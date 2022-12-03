@@ -1,5 +1,12 @@
 package vscale
 
+import (
+	"encoding/json"
+	"fmt"
+	"io/ioutil"
+	"os"
+)
+
 type VscaleServer struct {
 	Image    string `json:"make_from"`
 	Size     string `json:"rplan"`
@@ -25,4 +32,29 @@ type ServerConfig struct {
 	Active      bool              `json:"active"`
 	Loced       bool              `json:"loced"`
 	Deleted     bool              `json:"deleted,omitempty"`
+}
+
+func (s ServerConfig) validateConfig(data []byte) (string, []byte) {
+	err := json.Unmarshal(data, &s)
+	if err != nil {
+		panic(err)
+	}
+	json_data, _ := json.MarshalIndent(s, "", "	")
+	file := fmt.Sprintf("%s/%s.json", VscaleDir, s.Name)
+	return file, json_data
+}
+
+func (s ServerConfig) readConfig(file string) ServerConfig {
+	content := s.parceConfig(file)
+	json.Unmarshal(content, &s)
+	return s
+}
+
+func (s ServerConfig) parceConfig(file string) []byte {
+	os.Chdir(VscaleDir)
+	content, err := ioutil.ReadFile(file)
+	if err != nil {
+		panic(err)
+	}
+	return content
 }

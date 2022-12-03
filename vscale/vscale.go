@@ -9,6 +9,10 @@ import (
 	"os"
 )
 
+const VscaleDir = "configs/vscale"
+
+var server ServerConfig
+
 func ValidateAccount(token string) int {
 	url := "https://api.vscale.io/v1/account"
 	client := http.Client{}
@@ -62,7 +66,8 @@ func CreateServer(token string, template VscaleServer) int {
 
 	switch response.StatusCode {
 	case 201:
-		saveConfig(responseData)
+		file, json_data := server.validateConfig(responseData)
+		ioutil.WriteFile(file, json_data, 0644)
 	case 400:
 		panic(string(responseData))
 	}
@@ -76,19 +81,19 @@ func GetServer() {
 	}
 
 	for _, config := range files {
-		config := readConfig(config.Name())
+		config := server.readConfig(config.Name())
 		fmt.Println(config.Name)
 	}
 }
 
 func InspectServer(name string) {
-	config := parceConfig(name + ".json")
+	config := server.parceConfig(name + ".json")
 	fmt.Printf("%s", config)
 }
 
 func RemoveServer(token string, name string) int {
 	config_file := fmt.Sprintf("%s.json", name)
-	config := readConfig(config_file)
+	config := server.readConfig(config_file)
 	url := fmt.Sprintf("https://api.vscale.io/v1/scalets/%d", config.Ctid)
 	client := http.Client{}
 	request, err := http.NewRequest(http.MethodDelete, url, nil)
