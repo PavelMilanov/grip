@@ -66,7 +66,6 @@ func validate_token(token string, vendor string) *os.File {
 		} else {
 			tmp_file.WriteString(scanner.Text() + "\n")
 		}
-
 	}
 
 	if err := scanner.Err(); err != nil {
