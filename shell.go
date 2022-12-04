@@ -4,37 +4,10 @@ import (
 	"flag"
 	"fmt"
 	"os"
-	"strings"
 
 	"github.com/PavelMilanov/grip/regru"
 	"github.com/PavelMilanov/grip/vscale"
-	"github.com/joho/godotenv"
 )
-
-func init() {
-	os.Mkdir(vscale.VscaleDir, 0755)
-	os.Mkdir(regru.RegruDir, 0755)
-}
-
-func env(key string) string {
-	err := godotenv.Load()
-
-	if err != nil {
-		panic(err)
-	}
-	return os.Getenv(key)
-}
-
-func save_token(token string, vendor string) {
-	file, err := os.OpenFile(".env", os.O_WRONLY|os.O_APPEND, 0666)
-	if err != nil {
-		fmt.Println("Unable to create file:", err)
-		panic(err)
-	}
-	defer file.Close()
-	file.WriteString(fmt.Sprintf("%s_TOKEN=%s\n", strings.ToUpper(vendor), token))
-	fmt.Println("Token initialized successful!")
-}
 
 func cli_init() {
 	help_text := `
