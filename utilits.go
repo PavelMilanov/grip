@@ -26,7 +26,7 @@ func env(key string) string {
 	return os.Getenv(key)
 }
 func save_token(token string, vendor string) {
-	new_variable := fmt.Sprintf("%s_TOKEN=%s\n", strings.ToUpper(vendor), token)
+	new_variable := fmt.Sprintf("%s_TOKEN=%s", strings.ToUpper(vendor), token)
 	if check_environment(new_variable) {
 		new_env := validate_token(token, vendor)
 		update_environment_variables(new_env)
@@ -37,7 +37,7 @@ func save_token(token string, vendor string) {
 			panic(err)
 		}
 		defer file.Close()
-		file.WriteString(new_variable)
+		file.WriteString(new_variable + "\n")
 		fmt.Println("Token initialized successful!")
 	}
 }
@@ -54,6 +54,8 @@ func validate_token(token string, vendor string) *os.File {
 		file_string := strings.Split(scanner.Text(), "=")             // [VSCALE_TOKEN e299d3f826c5051ecef365fcbb7dceaf00b2cf88daac95e77c6a083ef38ed947]
 		if file_vendor == file_string[0] && token == file_string[1] { // если названия переменной равны, токены равны
 			fmt.Println("Token already exists")
+			tmp_file.WriteString(scanner.Text() + "\n") // для перезаписи в функцию update_environment_variables
+			break
 		} else if file_vendor == file_string[0] && token != file_string[1] { // если названия переменной равны, токены не равны
 			var flag string
 			fmt.Printf("%s already exists, continue? (Y/N)", file_vendor)
