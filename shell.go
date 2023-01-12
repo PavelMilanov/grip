@@ -57,6 +57,8 @@ grip vscale create	- create new server.
 grip vscale inspect	- inspect server config by name.
 grip vscale rm		- remove server by name.
 `
+	statusCode := make(chan int)
+
 	defer func() {
 		if r := recover(); r != nil {
 			fmt.Println(help_text)
@@ -89,7 +91,9 @@ grip vscale rm		- remove server by name.
 			Password: *createPassword,
 			Location: *createLocation,
 		}
-		status := vscale.CreateServer(token, data)
+		go vscale.CreateServer(token, data, statusCode)
+		fmt.Println("Server creating...")
+		status := <-statusCode
 		switch status {
 		case 201:
 			fmt.Println("Server successfully created")
@@ -99,7 +103,9 @@ grip vscale rm		- remove server by name.
 	case "inspect":
 		vscale.InspectServer(os.Args[3])
 	case "rm":
-		status := vscale.RemoveServer(token, os.Args[3])
+		go vscale.RemoveServer(token, os.Args[3], statusCode)
+		fmt.Println("Server removing...")
+		status := <-statusCode
 		switch status {
 		case 200:
 			fmt.Println("Server successfully removed")

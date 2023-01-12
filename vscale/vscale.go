@@ -46,7 +46,7 @@ func GetServers(token string) string {
 	return string(responseData)
 }
 
-func CreateServer(token string, template VscaleServer) int {
+func CreateServer(token string, template VscaleServer, canal chan int) {
 	data, _ := json.MarshalIndent(template, "", "	")
 	url := "https://api.vscale.io/v1/scalets"
 	client := http.Client{}
@@ -71,7 +71,7 @@ func CreateServer(token string, template VscaleServer) int {
 	case 400:
 		panic(string(responseData))
 	}
-	return response.StatusCode
+	canal <- response.StatusCode
 }
 
 func GetServer() {
@@ -91,7 +91,7 @@ func InspectServer(name string) {
 	fmt.Printf("%s", config)
 }
 
-func RemoveServer(token string, name string) int {
+func RemoveServer(token string, name string, canal chan int) {
 	config_file := fmt.Sprintf("%s.json", name)
 	config := server.readConfig(config_file)
 	url := fmt.Sprintf("https://api.vscale.io/v1/scalets/%d", config.Ctid)
@@ -107,8 +107,8 @@ func RemoveServer(token string, name string) int {
 	if response.StatusCode == 200 {
 		os.Chdir(VscaleDir)
 		os.Remove(config_file)
-		return response.StatusCode
+		canal <- response.StatusCode
 	} else {
-		return response.StatusCode
+		canal <- response.StatusCode
 	}
 }
