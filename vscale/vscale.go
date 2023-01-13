@@ -13,7 +13,7 @@ const VscaleDir = "configs/vscale"
 
 var server ServerConfig
 
-func ValidateAccount(token string) int {
+func ValidateAccount(token string, canal chan int) {
 	url := "https://api.vscale.io/v1/account"
 	client := http.Client{}
 	request, err := http.NewRequest(http.MethodGet, url, nil)
@@ -24,7 +24,7 @@ func ValidateAccount(token string) int {
 		panic(err)
 	}
 
-	return response.StatusCode
+	canal <- response.StatusCode
 }
 
 func GetServers(token string) string {

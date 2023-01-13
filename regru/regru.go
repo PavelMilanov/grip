@@ -13,7 +13,7 @@ const RegruDir = "configs/regru"
 
 var server ServerConfig
 
-func ValidateAccount(token string) int {
+func ValidateAccount(token string, canal chan int) {
 	url := "https://api.cloudvps.reg.ru/v1/account/info"
 	client := http.Client{}
 	request, err := http.NewRequest(http.MethodGet, url, nil)
@@ -25,7 +25,7 @@ func ValidateAccount(token string) int {
 		panic(err)
 	}
 
-	return response.StatusCode
+	canal <- response.StatusCode
 }
 
 func CreateServer(token string, template RegruServer, canal chan int) {

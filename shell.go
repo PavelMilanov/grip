@@ -13,6 +13,8 @@ func cli_init() {
 	help_text := `
 grip init -provider=<provider> -token=<provider token>
 `
+	messages := make(chan int)
+
 	defer func() {
 		if r := recover(); r != nil {
 			fmt.Println(help_text)
@@ -27,7 +29,10 @@ grip init -provider=<provider> -token=<provider token>
 
 	switch *vendorProvider {
 	case "vscale":
-		switch statusCode := vscale.ValidateAccount(*vendorToken); statusCode {
+		go vscale.ValidateAccount(*vendorToken, messages)
+		statusCode := <-messages
+		fmt.Println("Chek token...")
+		switch statusCode {
 		case 200:
 			save_token(*vendorToken, *vendorProvider)
 		case 403:
@@ -37,7 +42,10 @@ grip init -provider=<provider> -token=<provider token>
 		}
 
 	case "regru":
-		switch statusCode := regru.ValidateAccount(*vendorToken); statusCode {
+		go regru.ValidateAccount(*vendorToken, messages)
+		statusCode := <-messages
+		fmt.Println("Chek token...")
+		switch statusCode {
 		case 200:
 			save_token(*vendorToken, *vendorProvider)
 		case 403:
