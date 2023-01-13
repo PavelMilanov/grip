@@ -28,7 +28,7 @@ func ValidateAccount(token string) int {
 	return response.StatusCode
 }
 
-func CreateServer(token string, template RegruServer) int {
+func CreateServer(token string, template RegruServer, canal chan int) {
 	url := "https://api.cloudvps.reg.ru/v1/reglets"
 	data, _ := json.MarshalIndent(template, "", "	")
 	client := http.Client{}
@@ -50,10 +50,11 @@ func CreateServer(token string, template RegruServer) int {
 	case 201:
 		file, json_data := server.validateConfig(responseData)
 		ioutil.WriteFile(file, json_data, 0644)
+		canal <- response.StatusCode
 	case 400:
+		canal <- response.StatusCode
 		panic(string(responseData))
 	}
-	return response.StatusCode
 }
 
 func GetServer() {
@@ -73,7 +74,7 @@ func InspectServer(name string) {
 	fmt.Printf("%s", config)
 }
 
-func RemoveServer(token string, name string) int {
+func RemoveServer(token string, name string, canal chan int) {
 	config_file := fmt.Sprintf("%s.json", name)
 	config := server.readConfig(config_file)
 	url := fmt.Sprintf("https://api.cloudvps.reg.ru/v1/reglets/%d", config.Server.Id)
@@ -90,8 +91,8 @@ func RemoveServer(token string, name string) int {
 	if response.StatusCode == 204 {
 		os.Chdir(RegruDir)
 		os.Remove(config_file)
-		return response.StatusCode
+		canal <- response.StatusCode
 	} else {
-		return response.StatusCode
+		canal <- response.StatusCode
 	}
 }

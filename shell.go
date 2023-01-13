@@ -57,7 +57,7 @@ grip vscale create	- create new server.
 grip vscale inspect	- inspect server config by name.
 grip vscale rm		- remove server by name.
 `
-	statusCode := make(chan int)
+	messages := make(chan int)
 
 	defer func() {
 		if r := recover(); r != nil {
@@ -91,9 +91,9 @@ grip vscale rm		- remove server by name.
 			Password: *createPassword,
 			Location: *createLocation,
 		}
-		go vscale.CreateServer(token, data, statusCode)
+		go vscale.CreateServer(token, data, messages)
 		fmt.Println("Server creating...")
-		status := <-statusCode
+		status := <-messages
 		switch status {
 		case 201:
 			fmt.Println("Server successfully created")
@@ -103,9 +103,9 @@ grip vscale rm		- remove server by name.
 	case "inspect":
 		vscale.InspectServer(os.Args[3])
 	case "rm":
-		go vscale.RemoveServer(token, os.Args[3], statusCode)
+		go vscale.RemoveServer(token, os.Args[3], messages)
 		fmt.Println("Server removing...")
-		status := <-statusCode
+		status := <-messages
 		switch status {
 		case 200:
 			fmt.Println("Server successfully removed")
@@ -124,6 +124,9 @@ grip regru create	- create new server.
 grip regru inspect	- inspect server config by name.
 grip regru rm		- remove server by name.
 `
+
+	messages := make(chan int)
+
 	defer func() {
 		if r := recover(); r != nil {
 			fmt.Println(help_text)
@@ -154,11 +157,20 @@ grip regru rm		- remove server by name.
 			Backups:  *createBackup,
 			Location: *createLocation,
 		}
-		regru.CreateServer(token, data)
+		go regru.CreateServer(token, data, messages)
+		fmt.Println("Server creating...")
+		status := <-messages
+		switch status {
+		case 201:
+			fmt.Println("Server successfully created")
+		case 400:
+			fmt.Println("Invalid data")
+		}
 	case "inspect":
 		regru.InspectServer(os.Args[3])
 	case "rm":
-		status := regru.RemoveServer(token, os.Args[3])
+		go regru.RemoveServer(token, os.Args[3], messages)
+		status := <-messages
 		switch status {
 		case 204:
 			fmt.Println("Server successfully removed")

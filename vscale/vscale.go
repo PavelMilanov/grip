@@ -68,10 +68,11 @@ func CreateServer(token string, template VscaleServer, canal chan int) {
 	case 201:
 		file, json_data := server.validateConfig(responseData)
 		ioutil.WriteFile(file, json_data, 0644)
+		canal <- response.StatusCode
 	case 400:
+		canal <- response.StatusCode
 		panic(string(responseData))
 	}
-	canal <- response.StatusCode
 }
 
 func GetServer() {
