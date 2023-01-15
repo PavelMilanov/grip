@@ -25,13 +25,21 @@ type ServerConfig struct {
 	Size        string            `json:"rplan"`
 	Keys        []int             `json:"keys,omitempty"`
 	Tags        []string          `json:"tags,omitempty"`
-	PublicAddr  map[string]string `json:"public_address,omitempty"`
+	PublicAddr  map[string]string `json:"public_address"`
 	PrivateAddr map[string]string `json:"private_address,omitempty"`
 	Image       string            `json:"made_from,omitempty"`
 	CreateTime  string            `json:"created,omitempty"`
 	Active      bool              `json:"active"`
 	Loced       bool              `json:"loced"`
 	Deleted     bool              `json:"deleted,omitempty"`
+}
+
+func (s ServerConfig) parceResponce(data []byte) int {
+	err := json.Unmarshal(data, &s)
+	if err != nil {
+		panic(err)
+	}
+	return s.Ctid
 }
 
 func (s ServerConfig) validateConfig(data []byte) (string, []byte) {

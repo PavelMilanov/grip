@@ -79,7 +79,7 @@ grip vscale rm		- remove server by name.
 	token := env("VSCALE_TOKEN")
 	switch os.Args[2] {
 	case "ls":
-		vscale.GetServer()
+		vscale.ShowServer()
 	case "create":
 		createCommand := flag.NewFlagSet("create", flag.ExitOnError)
 		createImage := createCommand.String("image", "debian_11_64_001_master", "OS image to server. Default: debian_11")

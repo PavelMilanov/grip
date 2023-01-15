@@ -75,7 +75,34 @@ func CreateServer(token string, template VscaleServer, canal chan int) {
 	}
 }
 
-func GetServer() {
+func GetServerConfig(token string, ctid int) {
+	fmt.Println("Read and save server's configuration...")
+	url := fmt.Sprintf("https://api.vscale.io/v1/scalets/%d", ctid)
+	client := http.Client{}
+	request, err := http.NewRequest(http.MethodDelete, url, nil)
+	request.Header.Add("X-Token", token)
+
+	response, err := client.Do(request)
+	if err != nil {
+		panic(err)
+	}
+
+	responseData, err := ioutil.ReadAll(response.Body)
+	if err != nil {
+		panic(err)
+	}
+
+	switch response.StatusCode {
+	case 200:
+		fmt.Println(string(responseData))
+		file, json_data := server.validateConfig(responseData)
+		ioutil.WriteFile(file, json_data, 0644)
+	case 400:
+		panic(string(responseData))
+	}
+}
+
+func ShowServer() {
 	files, err := ioutil.ReadDir(VscaleDir)
 	if err != nil {
 		panic(err)
