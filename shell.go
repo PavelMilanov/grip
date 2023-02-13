@@ -112,7 +112,7 @@ grip vscale restart	- restart server.
 			fmt.Println("Invalid data")
 		}
 	case "inspect":
-		vscale.InspectServer(os.Args[3])
+		vscale.InspectServer(token, os.Args[3])
 	case "rm":
 		go vscale.RemoveServer(token, os.Args[3], messages)
 		fmt.Println("Server removing...")

@@ -18,20 +18,26 @@ type VscaleServer struct {
 }
 
 type ServerConfig struct {
-	Ctid        int               `json:"ctid"`
-	Name        string            `json:"name"`
-	Status      string            `json:"status"`
-	Location    string            `json:"location"`
-	Size        string            `json:"rplan"`
-	Keys        []int             `json:"keys,omitempty"`
-	Tags        []string          `json:"tags,omitempty"`
-	PublicAddr  map[string]string `json:"public_address"`
-	PrivateAddr map[string]string `json:"private_address,omitempty"`
-	Image       string            `json:"made_from,omitempty"`
-	CreateTime  string            `json:"created,omitempty"`
-	Active      bool              `json:"active"`
-	Loced       bool              `json:"loced"`
-	Deleted     bool              `json:"deleted,omitempty"`
+	Ctid        int      `json:"ctid"`
+	Name        string   `json:"name"`
+	Status      string   `json:"status"`
+	Location    string   `json:"location"`
+	Size        string   `json:"rplan"`
+	Keys        []int    `json:"keys,omitempty"`
+	Tags        []string `json:"tags,omitempty"`
+	PublicAddr  Network  `json:"public_address,omitempty"`
+	PrivateAddr Network  `json:"private_address,omitempty"`
+	Image       string   `json:"made_from,omitempty"`
+	CreateTime  string   `json:"created,omitempty"`
+	Active      bool     `json:"active"`
+	Loced       bool     `json:"loced"`
+	Deleted     bool     `json:"deleted,omitempty"`
+}
+
+type Network struct {
+	Ip   string `json:"address,omitempty"`
+	Mask string `json:"netmask,omitempty"`
+	Gw   string `json:"gateway,omitempty"`
 }
 
 func (s ServerConfig) parceResponce(data []byte) int {

@@ -75,30 +75,42 @@ func CreateServer(token string, template VscaleServer, canal chan int) {
 	}
 }
 
-func GetServerConfig(token string, ctid int) {
-	fmt.Println("Read and save server's configuration...")
-	url := fmt.Sprintf("https://api.vscale.io/v1/scalets/%d", ctid)
-	client := http.Client{}
-	request, err := http.NewRequest(http.MethodDelete, url, nil)
-	request.Header.Add("X-Token", token)
-
-	response, err := client.Do(request)
+func configServer(token string, name string) {
+	files, err := ioutil.ReadDir(VscaleDir)
 	if err != nil {
 		panic(err)
 	}
 
-	responseData, err := ioutil.ReadAll(response.Body)
-	if err != nil {
-		panic(err)
-	}
+	for _, config := range files {
+		config := server.readConfig(config.Name())
+		if config.Name == name {
+			url := fmt.Sprintf("https://api.vscale.io/v1/scalets/%d", config.Ctid)
+			client := http.Client{}
+			request, err := http.NewRequest(http.MethodGet, url, nil)
+			request.Header.Add("X-Token", token)
 
-	switch response.StatusCode {
-	case 200:
-		fmt.Println(string(responseData))
-		file, json_data := server.validateConfig(responseData)
-		ioutil.WriteFile(file, json_data, 0644)
-	case 400:
-		panic(string(responseData))
+			response, err := client.Do(request)
+			if err != nil {
+				panic(err)
+			}
+
+			responseData, err := ioutil.ReadAll(response.Body)
+			if err != nil {
+				panic(err)
+			}
+
+			switch response.StatusCode {
+			case 200:
+				file, json_data := server.validateConfig(responseData)
+				file = fmt.Sprintf("%s.json", name)
+				os.Chdir(VscaleDir)
+				err := ioutil.WriteFile(file, json_data, 0644)
+				if err != nil {
+					panic(err)
+				}
+			}
+			break
+		}
 	}
 }
 
@@ -114,7 +126,8 @@ func ShowServer() {
 	}
 }
 
-func InspectServer(name string) {
+func InspectServer(token string, name string) {
+	configServer(token, name)
 	config := server.parceConfig(name + ".json")
 	fmt.Printf("%s", config)
 }
