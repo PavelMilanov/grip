@@ -14,6 +14,9 @@ const VscaleDir = "configs/vscale"
 var server ServerConfig
 
 func ValidateAccount(token string, canal chan int) {
+	/*
+		Проверяет/ выводит информацию о аккаунте пользователя.
+	*/
 	url := "https://api.vscale.io/v1/account"
 	client := http.Client{}
 	request, err := http.NewRequest(http.MethodGet, url, nil)
@@ -28,6 +31,9 @@ func ValidateAccount(token string, canal chan int) {
 }
 
 func GetServers(token string) string {
+	/*
+		Получает по API список серверов.
+	*/
 	url := "https://api.vscale.io/v1/scalets"
 	client := http.Client{}
 	request, err := http.NewRequest(http.MethodGet, url, nil)
@@ -47,6 +53,10 @@ func GetServers(token string) string {
 }
 
 func CreateServer(token string, template VscaleServer, canal chan int) {
+	/*
+		Делает POST-запрос к API на создание сервера, исходя из шаблона.
+		Генерирует конфигурационный файл в json-формате.
+	*/
 	data, _ := json.MarshalIndent(template, "", "	")
 	url := "https://api.vscale.io/v1/scalets"
 	client := http.Client{}
@@ -76,6 +86,10 @@ func CreateServer(token string, template VscaleServer, canal chan int) {
 }
 
 func configServer(token string, name string) {
+	/*
+		Функция проходит по директории и ищет нужный файл по имени сервера, после
+		делает запрос по API и редактирует файл
+	*/
 	files, err := ioutil.ReadDir(VscaleDir)
 	if err != nil {
 		panic(err)
@@ -104,7 +118,7 @@ func configServer(token string, name string) {
 				file, json_data := server.validateConfig(responseData)
 				file = fmt.Sprintf("%s.json", name)
 				os.Chdir(VscaleDir)
-				err := ioutil.WriteFile(file, json_data, 0644)
+				err := ioutil.WriteFile(file, json_data, 0644) // перезаписывает конфиг. файл
 				if err != nil {
 					panic(err)
 				}
@@ -115,6 +129,9 @@ func configServer(token string, name string) {
 }
 
 func ShowServer() {
+	/*
+		Выводит список серверов по наличию конфигурационных файлов в директории.
+	*/
 	files, err := ioutil.ReadDir(VscaleDir)
 	if err != nil {
 		panic(err)
@@ -127,12 +144,19 @@ func ShowServer() {
 }
 
 func InspectServer(token string, name string) {
+	/*
+		Читает конфигурационный файл в директории по названию сервера и выводит его на печать.
+	*/
 	configServer(token, name)
 	config := server.parceConfig(name + ".json")
 	fmt.Printf("%s", config)
 }
 
 func RemoveServer(token string, name string, canal chan int) {
+	/*
+		Ишет конфигурационный файл по названию серверва и делает DELETE-запрос к API.
+		Удаляет конфигурационный файл.
+	*/
 	config_file := fmt.Sprintf("%s.json", name)
 	config := server.readConfig(config_file)
 	url := fmt.Sprintf("https://api.vscale.io/v1/scalets/%d", config.Ctid)
@@ -155,6 +179,9 @@ func RemoveServer(token string, name string, canal chan int) {
 }
 
 func ManageServer(token string, name string, command string, canal chan int) {
+	/*
+		Делает PATCH-запрос исходя из переданного параметра. (start/stop/restart).
+	*/
 	config_file := fmt.Sprintf("%s.json", name)
 	config := server.readConfig(config_file)
 	url := fmt.Sprintf("https://api.vscale.io/v1/scalets/%d/%s", config.Ctid, command)
