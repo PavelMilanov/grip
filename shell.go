@@ -64,6 +64,9 @@ grip vscale ls		- view servers.
 grip vscale create	- create new server.
 grip vscale inspect	- inspect server config by name.
 grip vscale rm		- remove server by name.
+grip vscale stop	- stop server.
+grip vscale start	- start server.
+grip vscale restart	- restart server.
 `
 	messages := make(chan int)
 
@@ -119,6 +122,36 @@ grip vscale rm		- remove server by name.
 			fmt.Println("Server successfully removed")
 		case 404:
 			fmt.Println("Server don't removed. Error")
+		}
+	case "stop":
+		go vscale.ManageServer(token, os.Args[3], "stop", messages)
+		fmt.Println("Server stopping...")
+		status := <-messages
+		switch status {
+		case 200:
+			fmt.Println("Server successfully stopped")
+		case 404:
+			fmt.Printf("Server don't stopped. Error")
+		}
+	case "start":
+		go vscale.ManageServer(token, os.Args[3], "start", messages)
+		fmt.Println("Server started...")
+		status := <-messages
+		switch status {
+		case 200:
+			fmt.Println("Server successfully started")
+		case 404:
+			fmt.Printf("Server don't started. Error")
+		}
+	case "restart":
+		go vscale.ManageServer(token, os.Args[3], "restart", messages)
+		fmt.Println("Server restarted...")
+		status := <-messages
+		switch status {
+		case 200:
+			fmt.Println("Server successfully restarted")
+		case 404:
+			fmt.Printf("Server don't restarted. Error")
 		}
 	default:
 		fmt.Println(help_text)

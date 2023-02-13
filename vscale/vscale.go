@@ -140,3 +140,23 @@ func RemoveServer(token string, name string, canal chan int) {
 		canal <- response.StatusCode
 	}
 }
+
+func ManageServer(token string, name string, command string, canal chan int) {
+	config_file := fmt.Sprintf("%s.json", name)
+	config := server.readConfig(config_file)
+	url := fmt.Sprintf("https://api.vscale.io/v1/scalets/%d/%s", config.Ctid, command)
+	client := http.Client{}
+	request, err := http.NewRequest(http.MethodDelete, url, nil)
+	request.Header.Add("X-Token", token)
+
+	response, err := client.Do(request)
+	if err != nil {
+		panic(err)
+	}
+
+	if response.StatusCode == 200 {
+		canal <- response.StatusCode
+	} else {
+		canal <- response.StatusCode
+	}
+}
