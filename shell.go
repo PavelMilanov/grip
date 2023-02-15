@@ -10,6 +10,9 @@ import (
 )
 
 func cli_init() {
+	/*
+		CLI-команды.
+	*/
 	help_text := `
 grip init -provider=<provider> -token=<provider token>
 `
@@ -59,6 +62,9 @@ grip init -provider=<provider> -token=<provider token>
 }
 
 func cli_vscale() {
+	/*
+		Команды для управления инфраструктурой через API vscale.
+	*/
 	help_text := `
 grip vscale ls		- view servers.
 grip vscale create	- create new server.
@@ -159,6 +165,9 @@ grip vscale restart	- restart server.
 }
 
 func cli_regru() {
+	/*
+		Команды для управления инфраструктурой через API reg.ru.
+	*/
 	help_text := `
 grip regru ls		- view servers.
 grip regru create	- create new server.
