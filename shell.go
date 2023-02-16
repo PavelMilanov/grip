@@ -217,7 +217,7 @@ grip regru rm		- remove server by name.
 			fmt.Println("Invalid data")
 		}
 	case "inspect":
-		regru.InspectServer(os.Args[3])
+		regru.InspectServer(token, os.Args[3])
 	case "rm":
 		go regru.RemoveServer(token, os.Args[3], messages)
 		status := <-messages

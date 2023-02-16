@@ -15,36 +15,6 @@ type RegruServer struct {
 	Backups  bool   `json:"backups,omitempty"`
 	Location string `json:"region_slug,omitempty"`
 }
-
-type ServerConfig struct {
-	Server ServerReglet `json:"reglet"`
-}
-
-func (s ServerConfig) validateConfig(data []byte) (string, []byte) {
-	err := json.Unmarshal(data, &s)
-	if err != nil {
-		panic(err)
-	}
-	json_data, _ := json.MarshalIndent(s, "", "	")
-	file := fmt.Sprintf("%s/%s.json", RegruDir, s.Server.Name)
-	return file, json_data
-}
-
-func (s ServerConfig) readConfig(file string) ServerConfig {
-	content := s.parceConfig(file)
-	json.Unmarshal(content, &s)
-	return s
-}
-
-func (s ServerConfig) parceConfig(file string) []byte {
-	os.Chdir(RegruDir)
-	content, err := ioutil.ReadFile(file)
-	if err != nil {
-		panic(err)
-	}
-	return content
-}
-
 type ServerReglet struct {
 	Backup               bool        `json:"backups_enabled,omitempty"`
 	CreatedAt            string      `json:"created_at"`
@@ -76,4 +46,33 @@ type ServerImage struct {
 	Size         string `json:"size_gigabytes"`
 	Slug         string `json:"slug"`
 	Type         string `json:"type"`
+}
+
+type ServerConfig struct {
+	Server ServerReglet `json:"reglet"`
+}
+
+func (s ServerConfig) validateConfig(data []byte) (string, []byte) {
+	err := json.Unmarshal(data, &s)
+	if err != nil {
+		panic(err)
+	}
+	json_data, _ := json.MarshalIndent(s, "", "	")
+	file := fmt.Sprintf("%s/%s.json", RegruDir, s.Server.Name)
+	return file, json_data
+}
+
+func (s ServerConfig) readConfig(file string) ServerConfig {
+	content := s.parceConfig(file)
+	json.Unmarshal(content, &s)
+	return s
+}
+
+func (s ServerConfig) parceConfig(file string) []byte {
+	os.Chdir(RegruDir)
+	content, err := ioutil.ReadFile(file)
+	if err != nil {
+		panic(err)
+	}
+	return content
 }
