@@ -107,7 +107,10 @@ func configServer(token string, name string) {
 	}
 }
 
-func GetServer() {
+func ShowServer() {
+	/*
+		Выводит список серверов по наличию конфигурационных файлов в директории.
+	*/
 	files, err := ioutil.ReadDir(RegruDir)
 	if err != nil {
 		panic(err)
@@ -145,6 +148,36 @@ func RemoveServer(token string, name string, canal chan int) {
 	if response.StatusCode == 204 {
 		os.Chdir(RegruDir)
 		os.Remove(config_file)
+		canal <- response.StatusCode
+	} else {
+		canal <- response.StatusCode
+	}
+}
+
+func ManageServer(token string, name string, command string, canal chan int) {
+	/*
+		Делает POST-запрос исходя из переданного параметра. (start/stop/restart).
+	*/
+	config_file := fmt.Sprintf("%s.json", name)
+	config := server.readConfig(config_file)
+	param := map[string]string{
+		"type": fmt.Sprintf("%s", command),
+	}
+	data, _ := json.Marshal(param)
+	// data_json, _ := json.MarshalIndent(command, "", "	")
+	url := fmt.Sprintf("https://api.vscale.io/v1/scalets/%d/actions", config.Server.Id)
+	client := http.Client{}
+	request, err := http.NewRequest(http.MethodPost, url, bytes.NewBuffer(data))
+	bearer := "Bearer " + token
+	request.Header.Add("Authorization", bearer)
+	request.Header.Set("Content-Type", "application/json; charset=UTF-8")
+
+	response, err := client.Do(request)
+	if err != nil {
+		panic(err)
+	}
+
+	if response.StatusCode == 200 {
 		canal <- response.StatusCode
 	} else {
 		canal <- response.StatusCode

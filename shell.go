@@ -173,6 +173,9 @@ grip regru ls		- view servers.
 grip regru create	- create new server.
 grip regru inspect	- inspect server config by name.
 grip regru rm		- remove server by name.
+grip regru stop		- stop server.
+grip regru start	- start server.
+grip regru restart	- restart server.
 `
 
 	messages := make(chan int)
@@ -189,7 +192,7 @@ grip regru rm		- remove server by name.
 	token := env("REGRU_TOKEN")
 	switch os.Args[2] {
 	case "ls":
-		regru.GetServer()
+		regru.ShowServer()
 	case "create":
 		createCommand := flag.NewFlagSet("create", flag.ExitOnError)
 		createImage := createCommand.String("image", "debian-11-amd64", "OS image to server. Default: debian_11")
@@ -226,6 +229,36 @@ grip regru rm		- remove server by name.
 			fmt.Println("Server successfully removed")
 		case 404:
 			fmt.Println("Server don't removed. Error")
+		}
+	case "stop":
+		go regru.ManageServer(token, os.Args[3], "stop", messages)
+		fmt.Println("Server stopping")
+		status := <-messages
+		switch status {
+		case 200:
+			fmt.Println("Server successfully stopped")
+		case 404:
+			fmt.Printf("Server don't stopped. Error")
+		}
+	case "start":
+		go regru.ManageServer(token, os.Args[3], "start", messages)
+		fmt.Println("Server started")
+		status := <-messages
+		switch status {
+		case 200:
+			fmt.Println("Server successfully started")
+		case 404:
+			fmt.Printf("Server don't started. Error")
+		}
+	case "restart":
+		go regru.ManageServer(token, os.Args[3], "reboot", messages)
+		fmt.Println("Server restarted")
+		status := <-messages
+		switch status {
+		case 200:
+			fmt.Println("Server successfully restarted")
+		case 404:
+			fmt.Printf("Server don't restarted. Error")
 		}
 	default:
 		fmt.Println(help_text)
