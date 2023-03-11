@@ -19,9 +19,15 @@ ___
 	3. [Просмотр конфигурации сервера](docs/vscale/inspect.md);
 	4. [Список всех серверов](docs/vscale/ls.md);
 	5. [Удаление сервера](docs/vscale/rm.md);
+	6. [Выключение сервера](docs/vscale/stop.md);
+	7. [Включение сервера](docs/vscale/start.md);
+	8. [Перезагрузка сервера](docs/vscale/restart.md);
 4. Работа с инфраструкторой reg.ru;
 	1. [Инициализация провайдера](docs/regru/init.md);
 	2. [Создание сервера](docs/regru/create.md);
 	3. [Просмотр конфигурации сервера](docs/regru/inspect.md);
 	4. [Список всех серверов](docs/regru/ls.md);
 	5. [Удаление сервера](docs/regru/rm.md);
+	6. [Выключение сервера](docs/regru/stop.md);
+	7. [Включение сервера](docs/regru/start.md);
+	8. [Перезагрузка сервера](docs/regru/restart.md);

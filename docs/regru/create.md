@@ -22,4 +22,4 @@ grip regru create --name=vscale-server
 ```
 > Server successfully created
 
-![[grip/docs/regru/create.png]]
+![grip/docs/regru/create.png]
