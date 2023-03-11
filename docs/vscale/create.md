@@ -24,4 +24,4 @@ grip vscale create --name=vscale-server --pwd=password
 ```
 > Server successfully created
 
-![grip/docs/vscale/create.png]
+![Создание сервера](grip/docs/vscale/create.png)
