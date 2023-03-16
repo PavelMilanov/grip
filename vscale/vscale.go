@@ -7,6 +7,8 @@ import (
 	"io/ioutil"
 	"net/http"
 	"os"
+
+	"github.com/PavelMilanov/grip/text"
 )
 
 const VscaleDir = "configs/vscale"
@@ -139,7 +141,7 @@ func ShowServer() {
 
 	for _, config := range files {
 		config := server.readConfig(config.Name())
-		fmt.Println(config.Name)
+		fmt.Println(string(text.GREEN), config.Name)
 	}
 }
 

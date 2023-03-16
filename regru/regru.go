@@ -7,6 +7,8 @@ import (
 	"io/ioutil"
 	"net/http"
 	"os"
+
+	"github.com/PavelMilanov/grip/text"
 )
 
 const RegruDir = "configs/regru"
@@ -118,7 +120,7 @@ func ShowServer() {
 
 	for _, config := range files {
 		config := server.readConfig(config.Name())
-		fmt.Println(config.Server.Name)
+		fmt.Println(string(text.GREEN), config.Server.Name)
 	}
 }
 

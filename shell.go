@@ -6,6 +6,7 @@ import (
 	"os"
 
 	"github.com/PavelMilanov/grip/regru"
+	"github.com/PavelMilanov/grip/text"
 	"github.com/PavelMilanov/grip/vscale"
 )
 
@@ -79,9 +80,9 @@ grip vscale restart	- restart server.
 	defer func() {
 		if r := recover(); r != nil {
 			fmt.Println(help_text)
-			fmt.Println(r)
 		}
 	}()
+
 	serverCommand := flag.NewFlagSet("vscale", flag.ExitOnError)
 	serverCommand.Parse(os.Args[2:])
 
@@ -113,9 +114,9 @@ grip vscale restart	- restart server.
 		status := <-messages
 		switch status {
 		case 201:
-			fmt.Println("Server successfully created")
+			fmt.Println(string(text.CYAN), "Server successfully created")
 		case 400:
-			fmt.Println("Invalid data")
+			fmt.Println(string(text.RED), "Server don't created. Eror")
 		}
 	case "inspect":
 		vscale.InspectServer(token, os.Args[3])
@@ -125,9 +126,9 @@ grip vscale restart	- restart server.
 		status := <-messages
 		switch status {
 		case 200:
-			fmt.Println("Server successfully removed")
+			fmt.Println(string(text.CYAN), "Server successfully removed")
 		case 404:
-			fmt.Println("Server don't removed. Error")
+			fmt.Println(string(text.RED), "Server don't removed. Error")
 		}
 	case "stop":
 		go vscale.ManageServer(token, os.Args[3], "stop", messages)
@@ -135,9 +136,9 @@ grip vscale restart	- restart server.
 		status := <-messages
 		switch status {
 		case 200:
-			fmt.Println("Server successfully stopped")
+			fmt.Println(string(text.CYAN), "Server successfully stopped")
 		case 404:
-			fmt.Printf("Server don't stopped. Error")
+			fmt.Println(string(text.RED), "Server don't stopped. Error")
 		}
 	case "start":
 		go vscale.ManageServer(token, os.Args[3], "start", messages)
@@ -145,9 +146,9 @@ grip vscale restart	- restart server.
 		status := <-messages
 		switch status {
 		case 200:
-			fmt.Println("Server successfully started")
+			fmt.Println(string(text.CYAN), "Server successfully started")
 		case 404:
-			fmt.Printf("Server don't started. Error")
+			fmt.Println(string(text.RED), "Server don't started. Error")
 		}
 	case "restart":
 		go vscale.ManageServer(token, os.Args[3], "restart", messages)
@@ -155,9 +156,9 @@ grip vscale restart	- restart server.
 		status := <-messages
 		switch status {
 		case 200:
-			fmt.Println("Server successfully restarted")
+			fmt.Println(string(text.CYAN), "Server successfully restarted")
 		case 404:
-			fmt.Printf("Server don't restarted. Error")
+			fmt.Println(string(text.RED), "Server don't restarted. Error")
 		}
 	default:
 		fmt.Println(help_text)
@@ -183,7 +184,6 @@ grip regru restart	- restart server.
 	defer func() {
 		if r := recover(); r != nil {
 			fmt.Println(help_text)
-			fmt.Println(r)
 		}
 	}()
 	serverCommand := flag.NewFlagSet("regru", flag.ExitOnError)
@@ -215,9 +215,9 @@ grip regru restart	- restart server.
 		status := <-messages
 		switch status {
 		case 201:
-			fmt.Println("Server successfully created")
+			fmt.Println(string(text.CYAN), "Server successfully created")
 		case 400:
-			fmt.Println("Invalid data")
+			fmt.Println(string(text.RED), "Server don't created. Error")
 		}
 	case "inspect":
 		regru.InspectServer(token, os.Args[3])
@@ -226,9 +226,9 @@ grip regru restart	- restart server.
 		status := <-messages
 		switch status {
 		case 204:
-			fmt.Println("Server successfully removed")
+			fmt.Println(string(text.CYAN), "Server successfully removed")
 		case 404:
-			fmt.Println("Server don't removed. Error")
+			fmt.Println(string(text.RED), "Server don't removed. Error")
 		}
 	case "stop":
 		go regru.ManageServer(token, os.Args[3], "stop", messages)
@@ -236,9 +236,9 @@ grip regru restart	- restart server.
 		status := <-messages
 		switch status {
 		case 200:
-			fmt.Println("Server successfully stopped")
+			fmt.Println(string(text.CYAN), "Server successfully stopped")
 		case 404:
-			fmt.Printf("Server don't stopped. Error")
+			fmt.Println(string(text.RED), "Server don't stopped. Error")
 		}
 	case "start":
 		go regru.ManageServer(token, os.Args[3], "start", messages)
@@ -246,9 +246,9 @@ grip regru restart	- restart server.
 		status := <-messages
 		switch status {
 		case 200:
-			fmt.Println("Server successfully started")
+			fmt.Println(string(text.CYAN), "Server successfully started")
 		case 404:
-			fmt.Printf("Server don't started. Error")
+			fmt.Println(string(text.RED), "Server don't started. Error")
 		}
 	case "restart":
 		go regru.ManageServer(token, os.Args[3], "reboot", messages)
@@ -256,9 +256,9 @@ grip regru restart	- restart server.
 		status := <-messages
 		switch status {
 		case 200:
-			fmt.Println("Server successfully restarted")
+			fmt.Println(string(text.CYAN), "Server successfully restarted")
 		case 404:
-			fmt.Printf("Server don't restarted. Error")
+			fmt.Println(string(text.RED), "Server don't restarted. Error")
 		}
 	default:
 		fmt.Println(help_text)
