@@ -5,6 +5,7 @@ import (
 	"fmt"
 	"io/ioutil"
 	"os"
+	"os/exec"
 	"strings"
 
 	"github.com/PavelMilanov/grip/regru"
@@ -97,4 +98,16 @@ func check_environment(pattern string) bool {
 		}
 	}
 	return check
+}
+
+func ssh_connection(user string, server string) {
+	/*
+		Ssh-подключение к серверу.
+	*/
+	command := fmt.Sprintf("%s@%s", user, server)
+	cmd := exec.Command("ssh", command)
+	cmd.Stdout = os.Stdout
+	cmd.Stdin = os.Stdin
+	cmd.Stderr = os.Stderr
+	cmd.Run()
 }
