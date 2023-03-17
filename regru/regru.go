@@ -185,3 +185,13 @@ func ManageServer(token string, name string, command string, canal chan int) {
 		canal <- response.StatusCode
 	}
 }
+
+func GetServerParametrs(name string) ServerConfig {
+	/*
+		Возвращает структуру конфигурационного файла сервера.
+	*/
+	config_file := fmt.Sprintf("%s.json", name)
+	os.Chdir(RegruDir)
+	config := server.readConfig(config_file)
+	return config
+}

@@ -100,11 +100,16 @@ func check_environment(pattern string) bool {
 	return check
 }
 
-func ssh_connection(user string, server string) {
+func ssh_connection(server string) {
 	/*
 		Ssh-подключение к серверу.
 	*/
-	command := fmt.Sprintf("%s@%s", user, server)
+	var name string
+	fmt.Print("Enter user: ")
+	fmt.Scan(&name)
+
+	command := fmt.Sprintf("%s@%s", name, server)
+	fmt.Println(command)
 	cmd := exec.Command("ssh", command)
 	cmd.Stdout = os.Stdout
 	cmd.Stdin = os.Stdin

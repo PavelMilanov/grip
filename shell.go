@@ -74,6 +74,7 @@ grip vscale rm		- remove server by name.
 grip vscale stop	- stop server.
 grip vscale start	- start server.
 grip vscale restart	- restart server.
+grip vscale ssh		- ssh connection to server by alias.
 `
 	messages := make(chan int)
 
@@ -160,6 +161,15 @@ grip vscale restart	- restart server.
 		case 404:
 			fmt.Println(string(text.RED), "Server don't restarted. Error")
 		}
+	case "ssh":
+		defer func() {
+			if err := recover(); err != nil {
+				fmt.Println("Server name error.\nWrite: 'grip vscale ls' for get servers")
+			}
+		}()
+		server := os.Args[3]
+		server_alias := vscale.GetServerParametrs(server)
+		ssh_connection(server_alias.PublicAddr.Ip)
 	default:
 		fmt.Println(help_text)
 	}
@@ -177,6 +187,7 @@ grip regru rm		- remove server by name.
 grip regru stop		- stop server.
 grip regru start	- start server.
 grip regru restart	- restart server.
+grip regru ssh		- ssh connection to server by alias.
 `
 
 	messages := make(chan int)
@@ -260,6 +271,15 @@ grip regru restart	- restart server.
 		case 404:
 			fmt.Println(string(text.RED), "Server don't restarted. Error")
 		}
+	case "ssh":
+		defer func() {
+			if err := recover(); err != nil {
+				fmt.Println("Server name error.\nWrite: 'grip regru ls' for get servers")
+			}
+		}()
+		server := os.Args[3]
+		server_alias := regru.GetServerParametrs(server)
+		ssh_connection(server_alias.Server.Ip)
 	default:
 		fmt.Println(help_text)
 	}
