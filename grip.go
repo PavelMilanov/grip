@@ -3,17 +3,15 @@ package main
 import (
 	"fmt"
 	"os"
+
+	"github.com/PavelMilanov/grip/text"
 )
 
 func main() {
-	help_text := `
-grip init	- add prodvider token. (vscale, regru)
-grip vscale	- menu interaction of vscale-provider.
-grip regru	- menu interaction of regru-provider. 
-`
+
 	defer func() {
 		if r := recover(); r != nil {
-			fmt.Println(help_text)
+			fmt.Printf(text.GRIP_MENU)
 		}
 	}()
 	switch os.Args[1] {
@@ -23,7 +21,9 @@ grip regru	- menu interaction of regru-provider.
 		cli_vscale()
 	case "regru":
 		cli_regru()
+	case "ruvds":
+		cli_regru()
 	default:
-		fmt.Println(help_text)
+		fmt.Printf(text.GRIP_MENU)
 	}
 }

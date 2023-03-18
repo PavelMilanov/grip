@@ -6,6 +6,7 @@ import (
 	"os"
 
 	"github.com/PavelMilanov/grip/regru"
+	"github.com/PavelMilanov/grip/ruvds"
 	"github.com/PavelMilanov/grip/text"
 	"github.com/PavelMilanov/grip/vscale"
 )
@@ -57,6 +58,10 @@ grip init -provider=<provider> -token=<provider token>
 		default:
 			fmt.Println(help_text)
 		}
+	case "ruvds":
+		go ruvds.ValidateAccount(*vendorToken, messages)
+		statusCode := <-messages
+		fmt.Println(statusCode)
 	default:
 		fmt.Printf("%s is not supported provider.", *vendorProvider)
 	}
@@ -66,21 +71,11 @@ func cli_vscale() {
 	/*
 		Команды для управления инфраструктурой через API vscale.
 	*/
-	help_text := `
-grip vscale ls		- view servers.
-grip vscale create	- create new server.
-grip vscale inspect	- inspect server config by name.
-grip vscale rm		- remove server by name.
-grip vscale stop	- stop server.
-grip vscale start	- start server.
-grip vscale restart	- restart server.
-grip vscale ssh		- ssh connection to server by alias.
-`
 	messages := make(chan int)
 
 	defer func() {
 		if r := recover(); r != nil {
-			fmt.Println(help_text)
+			fmt.Printf(text.VSCALE_MENU)
 		}
 	}()
 
@@ -171,7 +166,7 @@ grip vscale ssh		- ssh connection to server by alias.
 		server_alias := vscale.GetServerParametrs(server)
 		ssh_connection(server_alias.PublicAddr.Ip)
 	default:
-		fmt.Println(help_text)
+		fmt.Printf(text.VSCALE_MENU)
 	}
 }
 
@@ -179,22 +174,12 @@ func cli_regru() {
 	/*
 		Команды для управления инфраструктурой через API reg.ru.
 	*/
-	help_text := `
-grip regru ls		- view servers.
-grip regru create	- create new server.
-grip regru inspect	- inspect server config by name.
-grip regru rm		- remove server by name.
-grip regru stop		- stop server.
-grip regru start	- start server.
-grip regru restart	- restart server.
-grip regru ssh		- ssh connection to server by alias.
-`
 
 	messages := make(chan int)
 
 	defer func() {
 		if r := recover(); r != nil {
-			fmt.Println(help_text)
+			fmt.Printf(text.REGRU_MENU)
 		}
 	}()
 	serverCommand := flag.NewFlagSet("regru", flag.ExitOnError)
@@ -281,6 +266,6 @@ grip regru ssh		- ssh connection to server by alias.
 		server_alias := regru.GetServerParametrs(server)
 		ssh_connection(server_alias.Server.Ip)
 	default:
-		fmt.Println(help_text)
+		fmt.Printf(text.REGRU_MENU)
 	}
 }
