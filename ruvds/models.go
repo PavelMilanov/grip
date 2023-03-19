@@ -33,7 +33,38 @@ type RuvdsServer struct {
 }
 
 type ServerConfig struct {
-	Id int `json:"id"`
+	Server []ServerConfigItems `json:"items"`
+	// Premium      bool                `json:"premiun,omitempty"`
+	// Tarif        TarifItems          `json:"tariff"`
+}
+
+type ServerConfigItems struct {
+	Id            int              `json:"id"`
+	Cpu           int              `json:"cpu"`
+	Ram           int              `json:"ram"`
+	Vram          int              `json:"vram"`
+	Disk          []map[string]int `json:"drive"`
+	Ip            IpItems          `json:"ip"`
+	Tarif         TarifItems       `json:"tariff"`
+	PaymentPeriod int              `json:"paymentPeriod"`
+	AdminPassword string           `json:"defaultAdminPassword"`
+	Running       bool             `json:"running"`
+}
+
+type TarifItems struct {
+	Premium bool           `json:"premium"`
+	Id      int            `json:"id"`
+	Cpu     int            `json:"cpu"`
+	Ram     int            `json:"ram"`
+	Vram    float32        `json:"vram"`
+	Drive   map[string]int `json:"drive"`
+	Ip      int            `json:"ip"`
+	Active  bool           `json:"active"`
+}
+
+type IpItems struct {
+	Count int      `json:"count"`
+	Ip    []string `json:"assigned"`
 }
 
 // func (s ServerConfig) parceResponce(data []byte) int {

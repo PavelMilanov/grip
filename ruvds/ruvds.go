@@ -115,7 +115,7 @@ func configServer(token string, name string) {
 		config := server.readConfig(item.Name())
 		serverName := strings.Split(item.Name(), ".")
 		if serverName[0] == name {
-			urlPath := fmt.Sprintf("https://api.cloudvps.reg.ru/v1/reglets/%d", config.Id)
+			urlPath := fmt.Sprintf("https://api.cloudvps.reg.ru/v1/reglets/%d", config.Server[0].Id)
 			client := http.Client{}
 			params := url.Values{
 				"sessionToken": {token},
@@ -183,7 +183,7 @@ func ManageServer(token string, name string, command string) int {
 	client := http.Client{}
 	params := url.Values{
 		"sessionToken": {token},
-		"id":           {fmt.Sprintf("%d", config.Id)},
+		"id":           {fmt.Sprintf("%d", config.Server[0].Id)},
 		"type":         {command},
 	}
 	encodedData := params.Encode()
