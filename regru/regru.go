@@ -7,6 +7,7 @@ import (
 	"io/ioutil"
 	"net/http"
 	"os"
+	"strings"
 
 	"github.com/PavelMilanov/grip/text"
 )
@@ -15,7 +16,7 @@ const RegruDir = "configs/regru"
 
 var server ServerConfig
 
-func ValidateAccount(token string, canal chan int) {
+func ValidateAccount(token string) int {
 	/*
 		Получает по API список серверов.
 	*/
@@ -29,8 +30,8 @@ func ValidateAccount(token string, canal chan int) {
 	if err != nil {
 		panic(err)
 	}
-
-	canal <- response.StatusCode
+	defer response.Body.Close()
+	return response.StatusCode
 }
 
 func CreateServer(token string, template RegruServer, canal chan int) {
@@ -50,7 +51,7 @@ func CreateServer(token string, template RegruServer, canal chan int) {
 	if err != nil {
 		panic(err)
 	}
-
+	defer response.Body.Close()
 	responseData, err := ioutil.ReadAll(response.Body)
 	if err != nil {
 		panic(err)
@@ -88,7 +89,7 @@ func configServer(token string, name string) {
 			if err != nil {
 				panic(err)
 			}
-
+			defer response.Body.Close()
 			responseData, err := ioutil.ReadAll(response.Body)
 			if err != nil {
 				panic(err)
@@ -118,9 +119,11 @@ func ShowServer() {
 		panic(err)
 	}
 
-	for _, config := range files {
-		config := server.readConfig(config.Name())
-		fmt.Println(string(text.GREEN), config.Server.Name)
+	for _, item := range files {
+		// config := server.readConfig(config.Name())
+		server := strings.Split(item.Name(), ".")
+		fmt.Println(string(text.GREEN), server[0])
+		// fmt.Println(string(text.GREEN), config.Server.Name)
 	}
 }
 
@@ -146,7 +149,7 @@ func RemoveServer(token string, name string, canal chan int) {
 	if err != nil {
 		panic(err)
 	}
-
+	defer response.Body.Close()
 	if response.StatusCode == 204 {
 		os.Chdir(RegruDir)
 		os.Remove(config_file)
@@ -178,7 +181,7 @@ func ManageServer(token string, name string, command string, canal chan int) {
 	if err != nil {
 		panic(err)
 	}
-
+	defer response.Body.Close()
 	if response.StatusCode == 200 {
 		canal <- response.StatusCode
 	} else {

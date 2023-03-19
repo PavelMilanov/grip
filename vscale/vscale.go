@@ -7,6 +7,7 @@ import (
 	"io/ioutil"
 	"net/http"
 	"os"
+	"strings"
 
 	"github.com/PavelMilanov/grip/text"
 )
@@ -15,7 +16,7 @@ const VscaleDir = "configs/vscale"
 
 var server ServerConfig
 
-func ValidateAccount(token string, canal chan int) {
+func ValidateAccount(token string) int {
 	/*
 		Проверяет/ выводит информацию о аккаунте пользователя.
 	*/
@@ -28,8 +29,8 @@ func ValidateAccount(token string, canal chan int) {
 	if err != nil {
 		panic(err)
 	}
-
-	canal <- response.StatusCode
+	defer response.Body.Close()
+	return response.StatusCode
 }
 
 func GetServers(token string) string {
@@ -45,7 +46,7 @@ func GetServers(token string) string {
 	if err != nil {
 		panic(err)
 	}
-
+	defer response.Body.Close()
 	responseData, err := ioutil.ReadAll(response.Body)
 	if err != nil {
 		panic(err)
@@ -70,7 +71,7 @@ func CreateServer(token string, template VscaleServer, canal chan int) {
 	if err != nil {
 		panic(err)
 	}
-
+	defer response.Body.Close()
 	responseData, err := ioutil.ReadAll(response.Body)
 	if err != nil {
 		panic(err)
@@ -109,7 +110,7 @@ func configServer(token string, name string) {
 			if err != nil {
 				panic(err)
 			}
-
+			defer response.Body.Close()
 			responseData, err := ioutil.ReadAll(response.Body)
 			if err != nil {
 				panic(err)
@@ -139,9 +140,11 @@ func ShowServer() {
 		panic(err)
 	}
 
-	for _, config := range files {
-		config := server.readConfig(config.Name())
-		fmt.Println(string(text.GREEN), config.Name)
+	for _, item := range files {
+		// config := server.readConfig(config.Name())
+		server := strings.Split(item.Name(), ".")
+		fmt.Println(string(text.GREEN), server[0])
+		// fmt.Println(string(text.GREEN), config.Name)
 	}
 }
 
@@ -170,7 +173,7 @@ func RemoveServer(token string, name string, canal chan int) {
 	if err != nil {
 		panic(err)
 	}
-
+	defer response.Body.Close()
 	if response.StatusCode == 200 {
 		os.Chdir(VscaleDir)
 		os.Remove(config_file)
@@ -195,7 +198,7 @@ func ManageServer(token string, name string, command string, canal chan int) {
 	if err != nil {
 		panic(err)
 	}
-
+	defer response.Body.Close()
 	if response.StatusCode == 200 {
 		canal <- response.StatusCode
 	} else {

@@ -9,6 +9,7 @@ import (
 	"strings"
 
 	"github.com/PavelMilanov/grip/regru"
+	"github.com/PavelMilanov/grip/ruvds"
 	"github.com/PavelMilanov/grip/vscale"
 	"github.com/joho/godotenv"
 )
@@ -16,6 +17,7 @@ import (
 func init() {
 	os.Mkdir(vscale.VscaleDir, 0755)
 	os.Mkdir(regru.RegruDir, 0755)
+	os.Mkdir(ruvds.RuVdsDir, 0755)
 }
 
 func env(key string) string {

@@ -36,3 +36,19 @@ grip regru start	- start server.
 grip regru restart	- restart server.
 grip regru ssh		- ssh connection to server by alias.
 `
+
+const RUVDS_MENU = `
+grip ruvds ls		- view servers.
+grip ruvds create	- create new server.
+grip ruvds inspect	- inspect server config by name.
+grip ruvds rm		- remove server by name.
+grip ruvds stop		- stop server.
+grip ruvds start	- start server.
+grip ruvds restart	- restart server.
+grip ruvds ssh		- ssh connection to server by alias.
+`
+
+const INIT_MENU = `
+grip init -provider=<provider> -token=<provider token> (vscale, regru)
+grip init -provider=<provider> -token=<provider token> -username=<username> -password=<password> (ruvds)
+`

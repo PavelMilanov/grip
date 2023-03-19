@@ -22,7 +22,7 @@ func main() {
 	case "regru":
 		cli_regru()
 	case "ruvds":
-		cli_regru()
+		cli_ruvds()
 	default:
 		fmt.Printf(text.GRIP_MENU)
 	}
