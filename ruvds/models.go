@@ -34,8 +34,6 @@ type RuvdsServer struct {
 
 type ServerConfig struct {
 	Server []ServerConfigItems `json:"items"`
-	// Premium      bool                `json:"premiun,omitempty"`
-	// Tarif        TarifItems          `json:"tariff"`
 }
 
 type ServerConfigItems struct {
