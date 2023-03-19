@@ -5,7 +5,7 @@ ___
 #### Поддерживаемые провайдеры
 - [Vscale](https://vds.selectel.ru/ru/ "VSCALE")
 - [Reg.ru](https://www.reg.ru "REG.RU")
-- [RU VDS](https://ruvds.com/ru-rub "RU VDS")
+- [RU VDS](https://ruvds.com/ru-rub "RU VDS") (не протестировано)
 
 #### Возможности
  - Docker-подобный синтаксис для управления вашей инфраструкторой;
