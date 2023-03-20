@@ -4,7 +4,8 @@ ___
 
 #### Поддерживаемые провайдеры
 - [Vscale](https://vds.selectel.ru/ru/ "VSCALE")
- - [Reg.ru](https://www.reg.ru "REG.RU")
+- [Reg.ru](https://www.reg.ru "REG.RU")
+- [RU VDS](https://ruvds.com/ru-rub "RU VDS") (не протестировано)
 
 #### Возможности
  - Docker-подобный синтаксис для управления вашей инфраструкторой;
@@ -14,20 +15,22 @@ ___
 1. Начало работы;
 2. Основное меню;
 3. Работа с инфраструктурой vscale;
-	1. [Инициализация провайдера](docs/vscale/init.md);
-	2. [Создание сервера](docs/vscale/create.md);
-	3. [Просмотр конфигурации сервера](docs/vscale/inspect.md);
-	4. [Список всех серверов](docs/vscale/ls.md);
-	5. [Удаление сервера](docs/vscale/rm.md);
-	6. [Выключение сервера](docs/vscale/stop.md);
-	7. [Включение сервера](docs/vscale/start.md);
-	8. [Перезагрузка сервера](docs/vscale/restart.md);
+	- [Инициализация провайдера](docs/vscale/init.md);
+	- [Создание сервера](docs/vscale/create.md);
+	- [Просмотр конфигурации сервера](docs/vscale/inspect.md);
+	- [Список всех серверов](docs/vscale/ls.md);
+	- [Удаление сервера](docs/vscale/rm.md);
+	- [Выключение сервера](docs/vscale/stop.md);
+	- [Включение сервера](docs/vscale/start.md);
+	- [Перезагрузка сервера](docs/vscale/restart.md);
 4. Работа с инфраструкторой reg.ru;
-	1. [Инициализация провайдера](docs/regru/init.md);
-	2. [Создание сервера](docs/regru/create.md);
-	3. [Просмотр конфигурации сервера](docs/regru/inspect.md);
-	4. [Список всех серверов](docs/regru/ls.md);
-	5. [Удаление сервера](docs/regru/rm.md);
-	6. [Выключение сервера](docs/regru/stop.md);
-	7. [Включение сервера](docs/regru/start.md);
-	8. [Перезагрузка сервера](docs/regru/restart.md);
+	- [Инициализация провайдера](docs/regru/init.md);
+	- [Создание сервера](docs/regru/create.md);
+	- [Просмотр конфигурации сервера](docs/regru/inspect.md);
+	- [Список всех серверов](docs/regru/ls.md);
+	- [Удаление сервера](docs/regru/rm.md);
+	- [Выключение сервера](docs/regru/stop.md);
+	- [Включение сервера](docs/regru/start.md);
+	- [Перезагрузка сервера](docs/regru/restart.md);
+5. Работа с инфраструкторой RU VDS;
+	- в разработке;
