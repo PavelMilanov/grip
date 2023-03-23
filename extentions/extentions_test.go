@@ -7,5 +7,5 @@ func TestTest(t *testing.T) {
 	vendor2 := AnsibleHost{Vendor: "dev", Alias: []AnsibleAlias{{"work", "127.0.0.1"}, {"dev", "127.0.0.2"}, {"preprod", "127.0.0.3"}}}
 	vendor3 := AnsibleHost{Vendor: "prod", Alias: []AnsibleAlias{{"product", "10.0.0.1"}}}
 	model := []AnsibleHost{vendor1, vendor2, vendor3}
-	test(model)
+	GenerateAnsibleHostsFile(model)
 }
