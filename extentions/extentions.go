@@ -1,7 +1,6 @@
 package extentions
 
 import (
-	"fmt"
 	"os"
 	"text/template"
 )
@@ -22,15 +21,13 @@ func GenerateAnsibleHostsFile(model []AnsibleHost) {
 	if err != nil {
 		panic(err)
 	}
-	file, err := os.OpenFile("hosts", os.O_WRONLY|os.O_APPEND, 0666)
+	file, err := os.OpenFile("hosts", os.O_WRONLY, 0600)
 	if err != nil {
-		fmt.Println("Unable to create file:", err)
 		panic(err)
 	}
 	err = tmpl.Execute(file, model)
 	if err != nil {
 		panic(err)
 	}
-
 	defer file.Close()
 }

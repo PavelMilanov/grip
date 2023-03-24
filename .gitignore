@@ -1,5 +1,4 @@
 .env
 configs/
 grip
-hosts
 .DS_Store

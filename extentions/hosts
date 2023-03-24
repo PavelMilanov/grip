@@ -1,0 +1,9 @@
+[local]
+test1 ansible_host=ip1
+test2 ansible_host=ip2
+[dev]
+work ansible_host=127.0.0.1
+dev ansible_host=127.0.0.2
+preprod ansible_host=127.0.0.3
+[prod]
+product ansible_host=10.0.0.1
