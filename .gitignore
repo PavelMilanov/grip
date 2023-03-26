@@ -1,5 +1,7 @@
 .env
 configs/
 grip
-extentions/hosts
+extentions/ansible/hosts
+extentions/ansible/group_vars/
+
 .DS_Store

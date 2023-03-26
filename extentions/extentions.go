@@ -1,6 +1,7 @@
 package extentions
 
 import (
+	"fmt"
 	"os"
 	"text/template"
 )
@@ -30,7 +31,8 @@ func GenerateAnsibleHostsFile(model []AnsibleHost) {
 	if err != nil {
 		panic(err)
 	}
-	file, err := os.OpenFile("hosts", os.O_WRONLY, 0600)
+
+	file, err := os.OpenFile("ansible/hosts", os.O_WRONLY, 0600)
 	if err != nil {
 		panic(err)
 	}
@@ -46,11 +48,10 @@ func generateGroupVarsFiles(vendors []string, exit chan bool) {
 	/*
 		Создает файлы по шаблону в директории ansible/group_vars.
 	*/
-	os.Chdir("ansible/group_vars")
-	data := []byte("ansible_user: root\nansible_ssh_private_key_file: ./.ssh/id_rsa")
+	data := []byte("ansible_user: root\nansible_ssh_private_key_file: ~/.ssh/id_rsa")
 	for _, fileName := range vendors {
-		os.Create(fileName)
-		os.WriteFile(fileName, data, 0600)
+		fileNamePath := fmt.Sprintf("ansible/group_vars/%s", fileName)
+		os.WriteFile(fileNamePath, data, 0600)
 	}
 	exit <- true
 }
