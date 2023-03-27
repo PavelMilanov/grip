@@ -111,7 +111,6 @@ func ssh_connection(server string) {
 	fmt.Scan(&name)
 
 	command := fmt.Sprintf("%s@%s", name, server)
-	fmt.Println(command)
 	cmd := exec.Command("ssh", command)
 	cmd.Stdout = os.Stdout
 	cmd.Stdin = os.Stdin

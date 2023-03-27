@@ -8,3 +8,4 @@ ENV PATH=/ansible/.venv/bin:$PATH
 RUN pip install ansible
 COPY ansible/ansible.cfg /ansible/
 COPY ansible/hosts /ansible/
+COPY ansible/group_vars /ansible/group_vars

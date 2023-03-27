@@ -3,6 +3,7 @@ package extentions
 import (
 	"fmt"
 	"os"
+	"os/exec"
 	"text/template"
 )
 
@@ -54,4 +55,24 @@ func generateGroupVarsFiles(vendors []string, exit chan bool) {
 		os.WriteFile(fileNamePath, data, 0600)
 	}
 	exit <- true
+}
+
+func RunAnsible(command string) {
+	entrypoint := fmt.Sprintf("--entrypoint=%s", command)
+	cmd := exec.Command("docker", "run", "--rm", "--name=ansible-playbook", "--network=host", entrypoint, "-it", "ansible")
+	cmd.Stdout = os.Stdout
+	cmd.Stdin = os.Stdin
+	cmd.Stderr = os.Stderr
+	cmd.Run()
+}
+
+func buildAnsibleImage() {
+	cmd := exec.Command("docker", "images", "|", "awk", "'{print $1}'", "|", "tail", "-1")
+	out, err := cmd.Output()
+	if err != nil {
+		panic(err)
+	}
+	cmd.Stdin = os.Stdin
+	cmd.Stderr = os.Stderr
+	fmt.Println(out)
 }
