@@ -4,6 +4,7 @@ import (
 	"fmt"
 	"os"
 	"os/exec"
+	"strings"
 	"text/template"
 )
 
@@ -66,13 +67,14 @@ func RunAnsible(command string) {
 	cmd.Run()
 }
 
-func buildAnsibleImage() {
-	cmd := exec.Command("docker", "images", "|", "awk", "'{print $1}'", "|", "tail", "-1")
-	out, err := cmd.Output()
+func buildAnsibleImage() bool {
+	cmd, err := exec.Command("docker", "images").Output()
 	if err != nil {
 		panic(err)
 	}
-	cmd.Stdin = os.Stdin
-	cmd.Stderr = os.Stderr
-	fmt.Println(out)
+	if strings.Contains(string(cmd), "ansible") {
+		return true
+	} else {
+		return false
+	}
 }
