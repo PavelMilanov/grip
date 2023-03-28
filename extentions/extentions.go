@@ -50,7 +50,7 @@ func generateGroupVarsFiles(vendors []string, exit chan bool) {
 	/*
 		Создает файлы по шаблону в директории ansible/group_vars.
 	*/
-	data := []byte("ansible_user: root\nansible_ssh_private_key_file: ~/.ssh/id_rsa")
+	data := []byte("ansible_user: root\nansible_ssh_private_key_file: /.ssh/id_rsa")
 	for _, fileName := range vendors {
 		fileNamePath := fmt.Sprintf("ansible/group_vars/%s", fileName)
 		os.WriteFile(fileNamePath, data, 0600)
