@@ -13,7 +13,8 @@ const GRIP_MENU = `
 grip init	- add prodvider token. (vscale, regru, ruvds)
 grip vscale	- menu interaction of vscale-provider.
 grip regru	- menu interaction of regru-provider.
-grip ruvds	- menu interaction of ruvds-provider.  
+grip ruvds	- menu interaction of ruvds-provider.
+grip ansible	- ansible mode in you'r grip (extention). 
 `
 
 const VSCALE_MENU = `
@@ -51,4 +52,9 @@ grip ruvds ssh		- ssh connection to server by alias.
 const INIT_MENU = `
 grip init -provider=<provider> -token=<provider token> (vscale, regru)
 grip init -provider=<provider> -token=<provider token> -username=<username> -password=<password> (ruvds)
+`
+
+const ANSIBLE_MENU = `
+grip ansible build	- build ansible docker image.
+grip ansible run	- run ansible command in docker container.
 `

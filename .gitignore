@@ -4,3 +4,4 @@ grip
 extentions/ansible/hosts
 extentions/ansible/group_vars/
 .DS_Store
+docs/.obsidian/

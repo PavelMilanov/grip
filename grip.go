@@ -23,6 +23,8 @@ func main() {
 		cli_regru()
 	case "ruvds":
 		cli_ruvds()
+	case "ansible":
+		cli_ansible()
 	default:
 		fmt.Printf(text.GRIP_MENU)
 	}

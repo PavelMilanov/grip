@@ -6,6 +6,8 @@ import (
 	"os/exec"
 	"strings"
 	"text/template"
+
+	"github.com/PavelMilanov/grip/text"
 )
 
 type AnsibleHost struct {
@@ -58,9 +60,22 @@ func generateGroupVarsFiles(vendors []string, exit chan bool) {
 	exit <- true
 }
 
+func BuildAnsible() {
+	// generateGroupVarsFiles()
+	if buildAnsibleImage() {
+		cmd := exec.Command("docker", "build", "extentions/", "-t", "ansible:grip")
+		cmd.Stdout = os.Stdout
+		cmd.Stdin = os.Stdin
+		cmd.Stderr = os.Stderr
+		cmd.Run()
+	} else {
+		fmt.Println(string(text.RED), "Image already exist")
+	}
+}
+
 func RunAnsible(command string) {
 	entrypoint := fmt.Sprintf("--entrypoint=%s", command)
-	cmd := exec.Command("docker", "run", "--rm", "--name=ansible-playbook", "--network=host", entrypoint, "-it", "ansible")
+	cmd := exec.Command("docker", "run", "--rm", "--name=ansible-playbook", "--network=host", entrypoint, "-it", "ansible:grip")
 	cmd.Stdout = os.Stdout
 	cmd.Stdin = os.Stdin
 	cmd.Stderr = os.Stderr
@@ -73,8 +88,8 @@ func buildAnsibleImage() bool {
 		panic(err)
 	}
 	if strings.Contains(string(cmd), "ansible") {
-		return true
-	} else {
 		return false
+	} else {
+		return true
 	}
 }
