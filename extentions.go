@@ -22,12 +22,16 @@ func cli_ansible() {
 
 	switch os.Args[2] {
 	case "build":
-		extentions.BuildAnsible()
+		mode := flag.String("f", "local", "local and custom ansible build file config.")
+		flag.Parse()
+		extentions.BuildAnsible(*mode)
 	case "run":
 		cmd := flag.String("cmd", "", "Command to run")
 		flag.Parse()
 
 		extentions.RunAnsible(*cmd)
+	default:
+		fmt.Printf(text.ANSIBLE_MENU)
 	}
 
 }

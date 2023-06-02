@@ -2,6 +2,7 @@ package extentions
 
 import (
 	"fmt"
+	"io/ioutil"
 	"os"
 	"os/exec"
 	"strings"
@@ -19,7 +20,7 @@ type AnsibleAlias struct {
 	Server, Ip string
 }
 
-func GenerateAnsibleHostsFile(model []AnsibleHost) {
+func generateAnsibleHostsFile(model []AnsibleHost) {
 	/*
 		Генерирует файл hosts для ansible и генерирует group_vars.
 	*/
@@ -36,7 +37,7 @@ func GenerateAnsibleHostsFile(model []AnsibleHost) {
 		panic(err)
 	}
 
-	file, err := os.OpenFile("ansible/hosts", os.O_WRONLY, 0600)
+	file, err := os.OpenFile("extentions/ansible/hosts", os.O_WRONLY, 0600)
 	if err != nil {
 		panic(err)
 	}
@@ -54,16 +55,30 @@ func generateGroupVarsFiles(vendors []string, exit chan bool) {
 	*/
 	data := []byte("ansible_user: root\nansible_ssh_private_key_file: /.ssh/id_rsa")
 	for _, fileName := range vendors {
-		fileNamePath := fmt.Sprintf("ansible/group_vars/%s", fileName)
+		fileNamePath := fmt.Sprintf("extentions/ansible/group_vars/%s", fileName)
 		os.WriteFile(fileNamePath, data, 0600)
 	}
 	exit <- true
 }
 
-func BuildAnsible() {
-	// generateGroupVarsFiles()
+func BuildAnsible(mode string) {
+	if mode == "local" {
+		vendors := []AnsibleHost{}
+		files, err := ioutil.ReadDir("configs")
+		if err != nil {
+			panic(err)
+		}
+		for _, item := range files {
+			if item.IsDir() {
+				vendors = append(vendors, AnsibleHost{Vendor: fmt.Sprintf("%s", item.Name()), Alias: []AnsibleAlias{{"server", "ip"}}})
+			}
+		}
+		generateAnsibleHostsFile(vendors)
+	} else if mode == "custom" {
+		return // добавить логику
+	}
 	if buildAnsibleImage() {
-		cmd := exec.Command("docker", "build", "extentions/", "-t", "ansible:grip")
+		cmd := exec.Command("docker", "build", "extentions/ansible", "-t", "ansible:grip")
 		cmd.Stdout = os.Stdout
 		cmd.Stdin = os.Stdin
 		cmd.Stderr = os.Stderr
